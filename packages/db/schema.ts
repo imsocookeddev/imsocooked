@@ -22,7 +22,7 @@ export const users = pgTable('users',{
   lastName: varchar({length:255}).notNull(),
   username: varchar({length:255}).notNull(),  
   email: varchar( {length:255}).notNull(),
-  roles: userRoles().notNull().default('user'),
+  role: userRoles().notNull().default('user'),
   createdAt: timestamp().defaultNow(),
   profilePhoto: varchar({length:255}).notNull().default('https://www.gravatar.com/avatar/')
 });

@@ -1,5 +1,5 @@
 {
-  "name": "@repo/db",
+  "name": "@cooked/db",
   "version": "1.0.0",
   "scripts": {
     "migrations:generate": "drizzle-kit generate",
@@ -8,6 +8,9 @@
     "migrations:push": "drizzle-kit push",
     "kit:up": "drizzle-kit up",
     "studio": "drizzle-kit studio"
+  },
+  "exports": {
+    ".":"./index.ts"
   },
   "main": "./index.ts",
   "devDependencies": {

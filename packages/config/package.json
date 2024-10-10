@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "./cooked.config.ts",
+  "exports":{
+    ".":"./cooked.config.ts"
+  },
   "types": "./cooked.config.ts",
   "private": true,
   "scripts": {

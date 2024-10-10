@@ -19,10 +19,7 @@ const runMigrations = async () => {
     {fetchOptions:{max:1}}
 	);
 
-  console.log('created sql client');
 	const db = drizzle(sql);
-
-  console.log('created db client');
 
 	await migrate(db, { migrationsFolder: "drizzle" });
 

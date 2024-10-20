@@ -3,22 +3,32 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "dotenv -e ../../.env -- next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
+    "@clerk/nextjs": "^5.7.2",
+    "@cooked/db": "*",
+    "@hookform/resolvers": "^3.9.0",
+    "@radix-ui/react-avatar": "^1.1.1",
+    "@radix-ui/react-dropdown-menu": "^2.1.2",
+    "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-slot": "^1.1.0",
-    "@repo/ui": "*",
+    "@radix-ui/react-tabs": "^1.1.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.451.0",
     "next": "14.2.6",
+    "next-safe-action": "^7.9.4",
     "react": "18.3.1",
     "react-dom": "18.3.1",
+    "react-hook-form": "^7.53.1",
     "tailwind-merge": "^2.5.3",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",

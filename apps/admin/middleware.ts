@@ -1,19 +1,23 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
-import {config as envConfig} from "dotenv"
-import {getUser} from "@repo/db"
+import { clerkMiddleware,createRouteMatcher, } from "@clerk/nextjs/server";
+import {getAdminUser} from "@cooked/db"
+import { NextResponse } from "next/server";
 
-envConfig({ path: "../../.env" });
+const isPublicRoute = createRouteMatcher(["/sign-in(.*)", "/sign-up(.*)"]);
 
-export default clerkMiddleware(async (auth,req)=>{
-  const authObject = auth();
-  const id = authObject.userId;
-  if (!id){
-    authObject.redirectToSignIn();
+export default clerkMiddleware(async (auth,req) => {
+
+  if (!isPublicRoute(req)){
+    const { userId, redirectToSignIn } = auth();
+    if (!userId) {
+      redirectToSignIn();
+    }
+    // Else we get our user object
+    const user = await getAdminUser(userId!);
+    if (!user) {
+      return NextResponse.rewrite(new URL('/not_found',req.url));
+    }
+    // If we use the 'next' functionality here, we should see if we can get what this passes from the layouts or something
   }
-  // Else we get our user object
-  const user = await getUser(id!);
- 
-
 });
 
 export const config = {

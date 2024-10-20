@@ -5,8 +5,9 @@ import {
   pgEnum,
   timestamp,
   uuid,
-  integer,
   boolean,
+  real,
+  integer,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import c from "../config";
@@ -14,17 +15,19 @@ import c from "../config";
 export const userRoles = pgEnum('roles',c.roles);
 export const problemTypes = pgEnum('problem_types',c.problem_types);
 
+// Add a cuisines to regions table
+
 // Users table
 export const users = pgTable('users',{
-  id: serial().primaryKey(),
-  clerkID:varchar({length:255}).notNull(),
+  userID:varchar({length:255}).primaryKey(),
   firstName: varchar({length:255}).notNull(),
   lastName: varchar({length:255}).notNull(),
-  username: varchar({length:255}).notNull(),  
-  email: varchar( {length:255}).notNull(),
+  username: varchar({length:255}).notNull().unique(),  
+  email: varchar( {length:255}).notNull().unique(),
   role: userRoles().notNull().default('user'),
-  createdAt: timestamp().defaultNow(),
-  profilePhoto: varchar({length:255}).notNull().default('https://www.gravatar.com/avatar/')
+  joinedOn: timestamp().defaultNow(),
+  profilePhoto: varchar({length:255}).notNull().default('https://www.gravatar.com/avatar/'),
+  hearts: integer().notNull().default(5),
 });
 
 // user relations
@@ -35,13 +38,39 @@ export const userRelations = relations(users,
     cuisinesProgress: many(cuisineProgress),
   }));
 
+// cuisines table
+export const cuisines = pgTable('cuisines',{
+  cuisineID: uuid().defaultRandom().primaryKey(),
+  cuisineName: varchar({length:255}).notNull(),
+});
+
+// cuisine relations
+export const cuisineRelations = relations(cuisines,
+  ({many}) =>({
+    regions: many(regions),
+    cuisinesProgress: many(cuisineProgress),
+  }));
+
+  // Regions
+export const regions = pgTable('regions',{
+  regionID: uuid().defaultRandom().primaryKey(),
+  regionName: varchar({length:255}).notNull(),
+});
+
+// region relations
+export const regionRelations = relations(regions,
+  ({many}) =>({
+    cuisines: many(cuisines),
+    lessons: many(lessons),
+    regionsProgress: many(regionProgress),
+  }));
 
 // lessons table
 export const lessons = pgTable('lessons',{
   lessonID: serial().primaryKey(),
   title: varchar({length:255}).notNull(),
   regionID: varchar({length:255}).notNull(),
-  // techniqie id maybe?
+  cuisineID: varchar({length:255}).notNull(),
 });
 
 // lesson relations
@@ -52,21 +81,6 @@ export const lessonRelations = relations(lessons,
     lessonsProgress: many(lessonsProgress),
   }));
 
-
-// Regions
-export const regions = pgTable('regions',{
-  regionID: uuid().defaultRandom().primaryKey(),
-  regionName: varchar({length:255}).notNull(),
-  cuisineID: varchar({length:255}).notNull(),
-});
-
-// region relations
-export const regionRelations = relations(regions,
-  ({many}) =>({
-    cuisines: many(cuisines),
-    lessons: many(lessons),
-    regionsProgress: many(regionProgress),
-  }));
 
 
 export const problems = pgTable('problems',{
@@ -81,13 +95,6 @@ export const problemsRelations = relations(problems,
   ({many}) =>({
     lessons: many(lessons),
   }));
-
-// Maybe this one is needed? Either that or we do not allow users to have their progress in a kept for a lessson
-export const problemsProgress = pgTable('problems_progress',{
-  id: serial().primaryKey(),
-  problemID: varchar({length:255}).notNull(),
-  userID: varchar({length:255}).notNull(),
-});
 
 export const cuisinesToRegions = pgTable('cuisines_to_regions',{
   id: uuid().defaultRandom().primaryKey(),
@@ -115,25 +122,12 @@ export const lessonsToProblemsRelations = relations(lessonsToProblems,
     problems: one(problems),
 }));
 
-// cuisines table
-export const cuisines = pgTable('cuisines',{
-  cuisineID: uuid().defaultRandom().primaryKey(),
-  cuisineName: varchar({length:255}).notNull(),
-});
-
-// cuisine relations
-export const cuisineRelations = relations(cuisines,
-  ({many}) =>({
-    regions: many(regions),
-    cuisinesProgress: many(cuisineProgress),
-  }));
-
 // cuisineProgress table
 export const cuisineProgress = pgTable('cuisine_progress',{
   id: serial().primaryKey(),
   cuisineID: varchar({length:255}).notNull(),
   userID: varchar({length:255}).notNull(),
-  progress: integer().notNull().default(0),
+  progress: real().notNull().default(0),
   isCompleted: boolean().notNull().default(false),
   lastSeen: timestamp().defaultNow(),
 });
@@ -148,9 +142,10 @@ export const cuisineProgressRelations = relations(cuisineProgress,
 // regionProgress table
 export const regionProgress = pgTable('region_progress',{
   id: serial().primaryKey(),
+  cuisineID: varchar({length:255}).notNull(),
   regionID: varchar({length:255}).notNull(),
   userID: varchar({length:255}).notNull(),
-  progress: integer().notNull().default(0),
+  progress: real().notNull().default(0),
   isCompleted: boolean().notNull().default(false),
 });
 
@@ -166,7 +161,7 @@ export const lessonsProgress = pgTable('lessons_progress',{
   id: serial().primaryKey(),
   lessonID: varchar({length:255}).notNull(),
   userID: varchar({length:255}).notNull(),
-  progress: integer().notNull().default(0),
+  progress: real().notNull().default(0),
   isCompleted: boolean().notNull().default(false),
 });
 

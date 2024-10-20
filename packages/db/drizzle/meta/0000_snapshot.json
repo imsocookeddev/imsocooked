@@ -1,5 +1,5 @@
 {
-  "id": "1ceb54cb-5d3c-469e-9828-61797f0f2d2e",
+  "id": "e4fd680f-8d45-47f0-8ec2-61740dab82c3",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -28,7 +28,7 @@
         },
         "progress": {
           "name": "progress",
-          "type": "integer",
+          "type": "real",
           "primaryKey": false,
           "notNull": true,
           "default": 0
@@ -126,6 +126,12 @@
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
+        },
+        "cuisineID": {
+          "name": "cuisineID",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
@@ -157,7 +163,7 @@
         },
         "progress": {
           "name": "progress",
-          "type": "integer",
+          "type": "real",
           "primaryKey": false,
           "notNull": true,
           "default": 0
@@ -240,34 +246,6 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.problems_progress": {
-      "name": "problems_progress",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "problemID": {
-          "name": "problemID",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "userID": {
-          "name": "userID",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
     "public.region_progress": {
       "name": "region_progress",
       "schema": "",
@@ -276,6 +254,12 @@
           "name": "id",
           "type": "serial",
           "primaryKey": true,
+          "notNull": true
+        },
+        "cuisineID": {
+          "name": "cuisineID",
+          "type": "varchar(255)",
+          "primaryKey": false,
           "notNull": true
         },
         "regionID": {
@@ -292,7 +276,7 @@
         },
         "progress": {
           "name": "progress",
-          "type": "integer",
+          "type": "real",
           "primaryKey": false,
           "notNull": true,
           "default": 0
@@ -326,12 +310,6 @@
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
-        },
-        "cuisineID": {
-          "name": "cuisineID",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
         }
       },
       "indexes": {},
@@ -343,16 +321,10 @@
       "name": "users",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "clerkID": {
-          "name": "clerkID",
+        "userID": {
+          "name": "userID",
           "type": "varchar(255)",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true
         },
         "firstName": {
@@ -379,16 +351,16 @@
           "primaryKey": false,
           "notNull": true
         },
-        "roles": {
-          "name": "roles",
+        "role": {
+          "name": "role",
           "type": "roles",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
           "default": "'user'"
         },
-        "createdAt": {
-          "name": "createdAt",
+        "joinedOn": {
+          "name": "joinedOn",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
@@ -400,15 +372,56 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'https://www.gravatar.com/avatar/'"
+        },
+        "hearts": {
+          "name": "hearts",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 5
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "users_username_unique": {
+          "name": "users_username_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "username"
+          ]
+        },
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      }
     }
   },
-  "enums": {},
+  "enums": {
+    "public.problem_types": {
+      "name": "problem_types",
+      "schema": "public",
+      "values": [
+        "mulitple_choice",
+        "drag-n-drop",
+        "matching",
+        "single_word_response"
+      ]
+    },
+    "public.roles": {
+      "name": "roles",
+      "schema": "public",
+      "values": [
+        "user",
+        "admin"
+      ]
+    }
+  },
   "schemas": {},
   "sequences": {},
   "_meta": {

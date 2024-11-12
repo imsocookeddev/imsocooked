@@ -5,9 +5,10 @@ export default {
       {name:'Overview',url:'/'},
       {name:'Users',url:'/users'},
       {name:'Cuisines',url:'/cuisines'},
-      {name:'Regions',url:'/regions'},
+      {name:'Countries',url:'/countries'},
       {name:'Lessons',url:'/lessons'},
       {name:'Problems',url:'/problems'},
+      {name:"Problem Categories",url:'/categories'},
     ]
   },
   roles:[

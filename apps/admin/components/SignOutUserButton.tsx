@@ -6,7 +6,7 @@ import { signUserOutAction } from "@/actions/clerk";
 export default function SignOutUserButton() {
   return (
     <DropdownMenuLabel
-      className="flex flex-row w-full items-center justify-between"
+      className="flex flex-row w-full items-center justify-between cursor-pointer hover:bg-muted"
       onClick={async () => {
         await signUserOutAction();
       }}>

@@ -41,7 +41,6 @@ export default async function AdminUserButton() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <SignOutUserButton />
-        
       </DropdownMenuContent>
     </DropdownMenu>
   );

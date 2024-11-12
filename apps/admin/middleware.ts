@@ -5,12 +5,12 @@ import { NextResponse } from "next/server";
 const isPublicRoute = createRouteMatcher(["/sign-in(.*)", "/sign-up(.*)"]);
 
 export default clerkMiddleware(async (auth,req) => {
-
   if (!isPublicRoute(req)){
     const { userId, redirectToSignIn } = auth();
     if (!userId) {
       redirectToSignIn();
     }
+
     // Else we get our user object
     const user = await getAdminUser(userId!);
     if (!user) {

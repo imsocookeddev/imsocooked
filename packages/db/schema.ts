@@ -145,7 +145,7 @@ export const lesson = pgTable("lesson", {
   recipeUrl: text().notNull(),
 });
 
-// lesson relations
+// // lesson relations
 export const lessonRelations = relations(lesson,
   ({one}) => ({
     countries: one(country,{

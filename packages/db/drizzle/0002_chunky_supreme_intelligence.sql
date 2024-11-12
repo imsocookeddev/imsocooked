@@ -1,0 +1,1 @@
+DROP TABLE "cuisines_to_countries";

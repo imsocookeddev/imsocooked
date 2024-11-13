@@ -1,12 +1,19 @@
-import { Tabs } from "expo-router";
+import { Tabs, Redirect } from "expo-router";
 import React from "react";
 
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Text } from "tamagui";
+import { SignedIn, SignedOut } from "@clerk/clerk-expo";
+import { useUser } from "@clerk/clerk-expo";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { user, isLoaded, isSignedIn } = useUser();
+
+  if (!isSignedIn) {
+    return <Redirect href="/(auth)/sign-in" />;
+  }
 
   return (
     <Tabs
@@ -34,4 +41,3 @@ export default function TabLayout() {
     </Tabs>
   );
 }
-

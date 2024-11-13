@@ -38,6 +38,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => <Text>Explore</Text>,
         }}
       />
+        <Tabs.Screen
+            name={"profile"}
+            options={{
+                title: "Profile",
+                tabBarIcon: ({ color, focused }) => <Text>Profile</Text>,
+            }}
+        />
     </Tabs>
   );
 }

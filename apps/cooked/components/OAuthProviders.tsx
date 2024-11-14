@@ -15,9 +15,9 @@ WebBrowser.maybeCompleteAuthSession();
 
 const oAuthOptions = ["google", "discord", "apple"] as const;
 const oAuthLogos = [
-  <Google fill="#fff" width={20} />,
-  <Discord fill="#fff" width={30} />,
-  <Apple fill="#fff" width={23} />,
+  <Google fill="#fff" width={20} height={20} />,
+  <Discord fill="#fff" width={30} height={30} />,
+  <Apple fill="#fff" width={23} height={23} />,
 ] as const;
 
 export function OAuthProviders() {

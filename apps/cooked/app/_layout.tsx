@@ -10,10 +10,13 @@ import "react-native-reanimated";
 import { TamaguiProvider } from "tamagui";
 import { ClerkProvider, ClerkLoaded } from "@clerk/clerk-expo";
 import type { TokenCache } from "@clerk/clerk-expo/dist/cache/types";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import * as SecureStore from "expo-secure-store";
-
+import { trpc } from "@/utils/trpc/client";
+import { httpBatchLink } from "@trpc/client";
+import { useState } from "react";
+import { getClerkInstance } from "@clerk/clerk-expo";
 import { tamaguiConfig } from "../tamagui.config";
-
 import { useColorScheme } from "@/hooks/useColorScheme";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -58,22 +61,45 @@ if (!publishableKey) {
 export default function RootLayout() {
   const colorScheme = useColorScheme();
 
+  const [queryClient] = useState(() => new QueryClient());
+  const [trpcClient] = useState(() =>
+    trpc.createClient({
+      links: [
+        httpBatchLink({
+          url: "http://localhost:3000", // TODO: Change this to be sourced by config file at some point.
+
+          headers() {
+            const token = getClerkInstance({ tokenCache }).user?.id;
+
+            return {
+              Authorization: token ? `Bearer ${token}` : undefined,
+            };
+          },
+        }),
+      ],
+    }),
+  );
+
   return (
-    <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
-      <ClerkLoaded>
-        <TamaguiProvider config={tamaguiConfig} defaultTheme={colorScheme!}>
-          <PortalProvider shouldAddRootHost>
-            <ThemeProvider
-              value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-            >
-              <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="(app)" />
-                <Stack.Screen name="+not-found" />
-              </Stack>
-            </ThemeProvider>
-          </PortalProvider>
-        </TamaguiProvider>
-      </ClerkLoaded>
-    </ClerkProvider>
+    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
+          <ClerkLoaded>
+            <TamaguiProvider config={tamaguiConfig} defaultTheme={colorScheme!}>
+              <PortalProvider shouldAddRootHost>
+                <ThemeProvider
+                  value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+                >
+                  <Stack screenOptions={{ headerShown: false }}>
+                    <Stack.Screen name="(app)" />
+                    <Stack.Screen name="+not-found" />
+                  </Stack>
+                </ThemeProvider>
+              </PortalProvider>
+            </TamaguiProvider>
+          </ClerkLoaded>
+        </ClerkProvider>
+      </QueryClientProvider>
+    </trpc.Provider>
   );
 }

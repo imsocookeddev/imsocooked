@@ -1,9 +1,114 @@
 {
-  "id": "a304c240-535e-4726-8f68-46ce96b98619",
-  "prevId": "1ceb54cb-5d3c-469e-9828-61797f0f2d2e",
+  "id": "ce4894ab-9c5f-4a25-9376-05589e1779c3",
+  "prevId": "e4fd680f-8d45-47f0-8ec2-61740dab82c3",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.country": {
+      "name": "country",
+      "schema": "",
+      "columns": {
+        "countryID": {
+          "name": "countryID",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "countryName": {
+          "name": "countryName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "imageUrl": {
+          "name": "imageUrl",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.country_progress": {
+      "name": "country_progress",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "cuisineID": {
+          "name": "cuisineID",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "countryID": {
+          "name": "countryID",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "userID": {
+          "name": "userID",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "progress": {
+          "name": "progress",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.cuisine": {
+      "name": "cuisine",
+      "schema": "",
+      "columns": {
+        "cuisineID": {
+          "name": "cuisineID",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "cuisineName": {
+          "name": "cuisineName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "imageUrl": {
+          "name": "imageUrl",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cuisineDescription": {
+          "name": "cuisineDescription",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.cuisine_progress": {
       "name": "cuisine_progress",
       "schema": "",
@@ -28,24 +133,10 @@
         },
         "progress": {
           "name": "progress",
-          "type": "integer",
+          "type": "real",
           "primaryKey": false,
           "notNull": true,
           "default": 0
-        },
-        "isCompleted": {
-          "name": "isCompleted",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "lastSeen": {
-          "name": "lastSeen",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
         }
       },
       "indexes": {},
@@ -53,39 +144,15 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.cuisines": {
-      "name": "cuisines",
-      "schema": "",
-      "columns": {
-        "cuisineID": {
-          "name": "cuisineID",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "cuisineName": {
-          "name": "cuisineName",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.cuisines_to_regions": {
-      "name": "cuisines_to_regions",
+    "public.cuisines_to_countries": {
+      "name": "cuisines_to_countries",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "uuid",
+          "type": "serial",
           "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
+          "notNull": true
         },
         "cuisineID": {
           "name": "cuisineID",
@@ -93,8 +160,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "regionID": {
-          "name": "regionID",
+        "countryID": {
+          "name": "countryID",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
@@ -105,14 +172,21 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.lessons": {
-      "name": "lessons",
+    "public.lesson": {
+      "name": "lesson",
       "schema": "",
       "columns": {
         "lessonID": {
           "name": "lessonID",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "countryID": {
+          "name": "countryID",
+          "type": "varchar(255)",
+          "primaryKey": false,
           "notNull": true
         },
         "title": {
@@ -121,9 +195,21 @@
           "primaryKey": false,
           "notNull": true
         },
-        "regionID": {
-          "name": "regionID",
+        "cuisineID": {
+          "name": "cuisineID",
           "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "problemOrder": {
+          "name": "problemOrder",
+          "type": "uuid[]",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "recipeUrl": {
+          "name": "recipeUrl",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         }
@@ -133,79 +219,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.lessons_progress": {
-      "name": "lessons_progress",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "lessonID": {
-          "name": "lessonID",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "userID": {
-          "name": "userID",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "progress": {
-          "name": "progress",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
-        "isCompleted": {
-          "name": "isCompleted",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.lessons_to_problems": {
-      "name": "lessons_to_problems",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "lessonID": {
-          "name": "lessonID",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "problemID": {
-          "name": "problemID",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.problems": {
-      "name": "problems",
+    "public.problem": {
+      "name": "problem",
       "schema": "",
       "columns": {
         "problemID": {
@@ -228,6 +243,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "categoryID": {
+          "name": "categoryID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
         "correctAnswer": {
           "name": "correctAnswer",
           "type": "varchar(255)",
@@ -240,8 +261,30 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.problems_progress": {
-      "name": "problems_progress",
+    "public.problem_category": {
+      "name": "problem_category",
+      "schema": "",
+      "columns": {
+        "categoryID": {
+          "name": "categoryID",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "categoryName": {
+          "name": "categoryName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.problem_completion": {
+      "name": "problem_completion",
       "schema": "",
       "columns": {
         "id": {
@@ -268,8 +311,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.region_progress": {
-      "name": "region_progress",
+    "public.problems_to_categories": {
+      "name": "problems_to_categories",
       "schema": "",
       "columns": {
         "id": {
@@ -278,81 +321,32 @@
           "primaryKey": true,
           "notNull": true
         },
-        "regionID": {
-          "name": "regionID",
+        "problemID": {
+          "name": "problemID",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
+        "categoryID": {
+          "name": "categoryID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.user": {
+      "name": "user",
+      "schema": "",
+      "columns": {
         "userID": {
           "name": "userID",
           "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "progress": {
-          "name": "progress",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
-        "isCompleted": {
-          "name": "isCompleted",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.regions": {
-      "name": "regions",
-      "schema": "",
-      "columns": {
-        "regionID": {
-          "name": "regionID",
-          "type": "uuid",
           "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "regionName": {
-          "name": "regionName",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "cuisineID": {
-          "name": "cuisineID",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "public.users": {
-      "name": "users",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "clerkID": {
-          "name": "clerkID",
-          "type": "varchar(255)",
-          "primaryKey": false,
           "notNull": true
         },
         "firstName": {
@@ -367,14 +361,14 @@
           "primaryKey": false,
           "notNull": true
         },
-        "username": {
-          "name": "username",
+        "email": {
+          "name": "email",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
-        "email": {
-          "name": "email",
+        "username": {
+          "name": "username",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
@@ -387,25 +381,47 @@
           "notNull": true,
           "default": "'user'"
         },
-        "createdAt": {
-          "name": "createdAt",
+        "joinedOn": {
+          "name": "joinedOn",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
           "default": "now()"
         },
-        "profilePhoto": {
-          "name": "profilePhoto",
-          "type": "varchar(255)",
+        "profileUrl": {
+          "name": "profileUrl",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "default": "'https://www.gravatar.com/avatar/'"
+        },
+        "hearts": {
+          "name": "hearts",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 5
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "user_email_unique": {
+          "name": "user_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        },
+        "user_username_unique": {
+          "name": "user_username_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "username"
+          ]
+        }
+      }
     }
   },
   "enums": {

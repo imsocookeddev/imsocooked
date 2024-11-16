@@ -23,19 +23,23 @@ export function CodeInputSheet({ onSubmit, open, errors }: CodeInputProps) {
   const [verificationCode, setVerificationCode] = useState("");
 
   return (
-    <Sheet open={open} modal dismissOnOverlayPress={false}>
+    <Sheet open={open} dismissOnOverlayPress={false}>
       <Sheet.Overlay
         animation="lazy"
         enterStyle={{ opacity: 0 }}
         exitStyle={{ opacity: 0 }}
         onPress={() => Keyboard.dismiss()}
       />
-      <Sheet.Handle />
       <Sheet.Frame>
-        <Card elevate paddingVertical="$6" onPress={() => Keyboard.dismiss()}>
+        <Card
+          elevate
+          className="self-center"
+          paddingVertical="$6"
+          onPress={() => Keyboard.dismiss()}
+        >
           <Card.Header padded className="items-center mb-6" gap="$3">
             <H2 className="text-3xl">Enter Verification Code</H2>
-            <Text className="text-center mb-10">
+            <Text className="text-center mb-16">
               Please enter the verification code that was sent to your email
               address.
             </Text>
@@ -51,7 +55,7 @@ export function CodeInputSheet({ onSubmit, open, errors }: CodeInputProps) {
             />
           </Card.Header>
           <Card.Footer padded justifyContent="center">
-            <View className="w-full" gap="$4">
+            <View className="w-full">
               <Text className="text-red-600 text-lg text-center">
                 {errors && errors[0]?.longMessage}
               </Text>

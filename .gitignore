@@ -53,3 +53,4 @@ npm-debug.*
 *.orig.*
 web-build/
 .env*.local
+.tamagui

@@ -69,6 +69,7 @@ export default function RootLayout() {
               <Stack screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="(app)" />
                 <Stack.Screen name="+not-found" />
+                <Stack.Screen name={"(questions)"} />
               </Stack>
             </ThemeProvider>
           </PortalProvider>

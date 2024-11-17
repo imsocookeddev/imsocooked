@@ -14,7 +14,7 @@ const signInSchema = z.object({
   password: z.string().trim().max(24).min(8),
 });
 
-export default function SignUpScreen() {
+export default function SignInScreen() {
   const {
     control,
     handleSubmit,
@@ -44,7 +44,7 @@ export default function SignUpScreen() {
 
       if (signInAttempt.status === "complete") {
         await setActive({ session: signInAttempt.createdSessionId });
-        router.replace("/(app)/(home)/");
+        router.replace("/(app)/(home)");
       }
     } catch (error) {
       if (isClerkAPIResponseError(error)) setFormClerkErrors(error.errors);

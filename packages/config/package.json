@@ -1,8 +1,11 @@
 {
-  "name": "@repo/config",
+  "name": "@cooked/config",
   "version": "1.0.0",
-  "description": "",
+  "description": "Config file for all of the things related to this project",
   "main": "./cooked.config.ts",
+  "exports":{
+    ".":"./cooked.config.ts"
+  },
   "types": "./cooked.config.ts",
   "private": true,
   "scripts": {

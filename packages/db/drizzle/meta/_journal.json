@@ -43,6 +43,13 @@
       "when": 1731398989391,
       "tag": "0005_steep_aaron_stack",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1731781100597,
+      "tag": "0006_large_thunderbolt_ross",
+      "breakpoints": true
     }
   ]
 }

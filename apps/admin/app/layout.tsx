@@ -56,3 +56,4 @@ export default function RootLayout({
     </ClerkProvider>
   );
 }
+export const runtime = 'edge';

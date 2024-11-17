@@ -21,4 +21,5 @@ export default {
     "matching",
     "single_word_response",
   ],
+  defaultImageURL:"https://cpsaxb6waydelzll.public.blob.vercel-storage.com/kitty-UVMd9CJBBFxJ1MUifj0lysaqPkUGUT.jpeg"
 } as const;

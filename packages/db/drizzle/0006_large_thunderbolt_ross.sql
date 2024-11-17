@@ -1,0 +1,1 @@
+ALTER TABLE "cuisine" ALTER COLUMN "imageUrl" SET DEFAULT 'https://cpsaxb6waydelzll.public.blob.vercel-storage.com/kitty-UVMd9CJBBFxJ1MUifj0lysaqPkUGUT.jpeg';

@@ -40,10 +40,14 @@ export const userRelations = relations(user,
   }));
 
 // cuisines table
-export const cuisine = pgTable('cuisine',{
+export const cuisine = pgTable("cuisine", {
   cuisineID: uuid().defaultRandom().primaryKey(),
-  cuisineName: varchar({length:255}).notNull(),
-  imageUrl: text().notNull(),
+  cuisineName: varchar({ length: 255 }).notNull(),
+  imageUrl: text()
+    .notNull()
+    .default(
+      c.defaultImageURL
+    ),
   cuisineDescription: text().notNull(),
 });
 
@@ -80,7 +84,7 @@ export const cuisineProgressRelations = relations(cuisineProgress,
 export const country = pgTable('country',{
   countryID: uuid().defaultRandom().primaryKey(),
   countryName: varchar({length:255}).notNull(),
-  imageUrl: text().notNull(),
+  imageUrl: text().notNull().default(c.defaultImageURL),
 });
 
 // country relations

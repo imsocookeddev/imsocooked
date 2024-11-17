@@ -10,7 +10,11 @@
     "studio": "drizzle-kit studio"
   },
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./schema": "./schema.ts",
+    "./functions": "./functions.ts",
+    "./zod": "./zod.ts",
+    "./types": "./types.ts"
   },
   "main": "./index.ts",
   "dependencies": {

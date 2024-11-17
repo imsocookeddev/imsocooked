@@ -1,5 +1,7 @@
 import { db,eq,and } from ".";
-import { user } from "./schema";
+import { cuisine, user } from "./schema";
+import z from "zod";
+import { CreateCuisineProps } from "./types";
 
 export async function getUser(id:string){
   return db.query.user.findFirst({
@@ -16,5 +18,16 @@ export async function getAdminUser(id:string){
 }
 
 export async function getAllUsers(){
-  return db.query.user.findMany()
+  return db.query.user.findMany();
+}
+
+export async function getAllCuisines(){
+  return db.query.cuisine.findMany();
+}
+
+
+export async function createCuisine(props:CreateCuisineProps){
+  return db.insert(cuisine).values({
+    ...props
+  }).returning({ id:cuisine.cuisineID});
 }

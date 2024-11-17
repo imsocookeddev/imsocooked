@@ -12,7 +12,7 @@ export async function createContext({ req }: FetchCreateContextFnOptions) {
         return null;
       }
 
-      const user = await clerkClient.users.getUser(userID);
+      const user = await clerkClient().users.getUser(userID);
 
       return user;
     }

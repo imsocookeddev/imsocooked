@@ -1,5 +1,5 @@
 import { db, eq, and } from ".";
-import { user } from "./schema";
+import { user, lesson } from "./schema";
 import c from "@cooked/config";
 
 export async function createUser({
@@ -28,7 +28,7 @@ export async function createUser({
       username,
     });
   } catch (e) {
-    console.error("Error occurred while inserting user data: " + e);
+    console.error("Error occurred while inserting user data: " + e); // TODO: Verify this logic works.
     success = false;
   }
 
@@ -41,6 +41,10 @@ export async function getUser(id: string) {
   });
 }
 
+export async function getLessonsByCountryID(countryID: string) {
+  return db.query.lesson.findMany({ where: eq(lesson.countryID, countryID) });
+}
+
 export async function getAdminUser(id: string) {
   return db.query.user.findFirst({
     where: and(eq(user.userID, id), eq(user.role, "admin")),
@@ -51,3 +55,6 @@ export async function getAllUsers() {
   return db.query.user.findMany();
 }
 
+export async function getAllCountries() {
+  return db.query.country.findMany();
+}

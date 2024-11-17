@@ -1,36 +1,67 @@
 import { publicProcedure, router, authenticatedProcedure } from "./trpc";
 import { z } from "zod";
-import { createUser } from "@cooked/db";
+import {
+  createUser,
+  getUser,
+  getAllCountries,
+  getLessonsByCountryID,
+} from "@cooked/db";
 
-const newUser = publicProcedure
+const newUser = authenticatedProcedure
   .input(
     z.object({
-      userID: z.string(),
-      firstName: z.string(),
-      lastName: z.string(),
-      username: z.string().max(32),
-      email: z.string().email(),
+      firstName: z.string().min(1).max(255),
+      lastName: z.string().min(1).max(255),
+      username: z.string().min(1).max(255),
     }),
   )
-  .mutation(async ({ input }) => {
-    const { userID, firstName, lastName, username, email } = input;
+  .mutation(async ({ input, ctx }) => {
+    const { firstName, lastName, username } = input;
+    const { id, primaryEmailAddress } = ctx.user;
+
+    if (!primaryEmailAddress) {
+      return {
+        success: false,
+        message: "A fatal error has occurred",
+      };
+    }
 
     const success = await createUser({
-      id: userID,
+      id,
       firstName,
       lastName,
       username,
-      email,
+      email: primaryEmailAddress?.emailAddress,
     });
 
     const message = success
-      ? "User created successfully"
-      : "Unable to create new user";
+      ? "User data updated successfully!"
+      : "Unable to update user data.";
 
     return {
       success,
       message,
     };
+  });
+
+// Determine whether the user has entered their personal data.
+const checkExistingUser = authenticatedProcedure.query(async ({ ctx }) => {
+  console.log("id: " + ctx.user.id);
+  const user = await getUser(ctx.user.id);
+
+  return user !== undefined;
+});
+
+const getCountryList = authenticatedProcedure.query(async () => {
+  const countries = await getAllCountries();
+
+  return countries;
+});
+
+const getLessonsByCountry = authenticatedProcedure
+  .input(z.string())
+  .query(async ({ input }) => {
+    return await getLessonsByCountryID(input);
   });
 
 /* Test Procedures */
@@ -51,6 +82,9 @@ export const appRouter = router({
   echoHello,
   echoUserData,
   newUser,
+  checkExistingUser,
+  getCountryList,
+  getLessonsByCountry,
 });
 
 export type AppRouter = typeof appRouter;

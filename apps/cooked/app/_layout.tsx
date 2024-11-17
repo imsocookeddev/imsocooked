@@ -60,19 +60,19 @@ if (!publishableKey) {
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-
   const [queryClient] = useState(() => new QueryClient());
   const [trpcClient] = useState(() =>
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: "http://localhost:3000", // TODO: Change this to be sourced by config file at some point.
+          url: "https://imsocooked.loca.lt/api/trpc", // TODO: Change this to be sourced by config file at some point.
 
           headers() {
             const token = getClerkInstance({ tokenCache }).user?.id;
 
             return {
               Authorization: token ? `Bearer ${token}` : undefined,
+              "bypass-tunnel-reminder": "yes",
             };
           },
         }),

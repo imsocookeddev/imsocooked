@@ -6,5 +6,8 @@
     ".": "./index.ts"
   },
   "license": "ISC",
-  "description": "TRPC endpoints shared between nextjs and expo applications"
+  "description": "TRPC endpoints shared between nextjs and expo applications",
+  "dependencies": {
+    "@trpc/server": "11.0.0-rc.630"
+  }
 }

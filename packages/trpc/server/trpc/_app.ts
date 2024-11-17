@@ -1,4 +1,4 @@
-import { publicProcedure, router } from "./trpc";
+import { publicProcedure, router, authenticatedProcedure } from "./trpc";
 import { z } from "zod";
 import { createUser } from "@cooked/db";
 
@@ -33,15 +33,24 @@ const newUser = publicProcedure
     };
   });
 
-const echoHello = publicProcedure.query(() => {
+/* Test Procedures */
+const echoHello = publicProcedure.query(async () => {
   console.log("Hello world from react native");
 
-  return "hello world from trpc";
+  return { message: "hello world from trpc" };
+});
+
+const echoUserData = authenticatedProcedure.query(({ ctx: { user } }) => {
+  const str = user.primaryEmailAddress?.emailAddress;
+  console.log(user.primaryEmailAddress?.emailAddress);
+
+  return { message: str };
 });
 
 export const appRouter = router({
-  newUser,
   echoHello,
+  echoUserData,
+  newUser,
 });
 
 export type AppRouter = typeof appRouter;

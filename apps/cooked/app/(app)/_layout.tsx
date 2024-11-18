@@ -1,6 +1,6 @@
 import { useFonts } from "expo-font";
 import { useEffect } from "react";
-import { Slot, SplashScreen } from "expo-router";
+import { Stack, SplashScreen } from "expo-router";
 
 export default function AppLayout() {
   const [loaded] = useFonts({
@@ -17,5 +17,5 @@ export default function AppLayout() {
     return null;
   }
 
-  return <Slot />;
+  return <Stack screenOptions={{ headerShown: false }} />;
 }

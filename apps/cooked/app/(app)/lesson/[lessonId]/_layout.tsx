@@ -15,7 +15,7 @@ import { useState } from "react";
 export default function LessonLayout() {
   const { lessonId } = useLocalSearchParams();
   const [progress, setProgress] = useState(30 % 100);
-  const lessonDataQuery = trpc.getLesson.useQuery(lessonId as string);
+  // const lessonDataQuery = trpc.getLessonsByCountry.useQuery(lessonId as string);
   const router = useRouter();
 
   return (

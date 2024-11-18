@@ -8,6 +8,7 @@ import Page2 from '../assets/images/road2c.png';
 import Page3 from '../assets/images/road3c.png';
 
 import Check from '../assets/images/check.png';
+import {Link} from "expo-router";
 
 const ImageArray = () => {
 
@@ -78,7 +79,9 @@ const ImageArray = () => {
      // Map over the array to create Image components
      const imageComponents = ImageMap.map((image) => (
         <View key={image.id} style={{ }}>
-          <Image source={image.src} style={image.style} />
+          <Link href={"@cooked/(app)/lesson/1/1"} style={image.style}>
+              <Image source={image.src}/>
+          </Link>
         </View>
       ));
     

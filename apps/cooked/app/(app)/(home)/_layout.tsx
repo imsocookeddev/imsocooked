@@ -62,6 +62,15 @@ export default function TabLayout() {
             ),
           }}
       />
+        <Tabs.Screen
+            name={"explore"}
+            options={{
+                title: "Explore",
+                tabBarIcon: ({ color, focused }) => (
+                    <Image source={{uri: "https://www.figma.com/file/JiMKqhf6sFiliZrHz1yP02/image/312e2d36281514c5d264245a27844c53f253284b", width: 30, height: 30}} />
+                ),
+            }}
+        />
     </Tabs>
   );
 }

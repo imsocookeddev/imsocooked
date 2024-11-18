@@ -1,4 +1,5 @@
 import { View, Image, Text } from "tamagui";
+import {Link} from "expo-router";
 
 export default function HomeScreen() {
   return (
@@ -67,12 +68,14 @@ export default function HomeScreen() {
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
           {/* Card 1 */}
           <View style={{ width: '30%', marginBottom: 20 }}>
+              {/*<Link href={"@cooked/(app)/(home)/explore.tsx"}>*/}
             <Image
               source={require("@/assets/images/book.png")}
               style={{ width: '100%', height: 120 }}
               resizeMode="contain"
             />
             <Text style={{ textAlign: 'center', color: '#715948F0', marginTop: 5 }}>Asian</Text>
+              {/*</Link>*/}
           </View>
           {/* Card 2 */}
           <View style={{ width: '30%', marginBottom: 20 }}>

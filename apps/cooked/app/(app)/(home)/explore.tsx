@@ -2,8 +2,9 @@ import * as React from 'react';
 import { View, SafeAreaView, ScrollView, Text } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useNavigation } from '@react-navigation/native';
-import { Button } from '@react-navigation/elements';
-import Roadmap from  '../../../components/Roadmap';
+import { Button } from 'tamagui';
+import Roadmap from '../../../components/Roadmap';
+import {router} from "expo-router";
 
 
 function ChinaPage() {
@@ -14,6 +15,7 @@ function ChinaPage() {
     <View style={{flex:1, alignItems: "center"}}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <Roadmap></Roadmap>
+        <Button marginVertical={"$4"} onPress={() => router.push("/(app)/(home)")}>Back</Button>
       </ScrollView>
     </View>
   </SafeAreaView>
@@ -31,6 +33,7 @@ function JapanPage() {
     <View style={{flex:1, alignItems: "center"}}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <Roadmap></Roadmap>
+        <Button marginVertical={"$4"} onPress={() => router.push("/(app)/(home)")}>Back</Button>
       </ScrollView>
     </View>
   </SafeAreaView>

@@ -73,16 +73,16 @@ export default function ProfileView() {
                     <H1 color={"black"}>Account Settings</H1>
                     <Form onSubmit={onSubmit}>
                         <Label color={"black"}>First Name</Label>
-                        <Input size={"$3"} onChangeText={(t) => setNewFirstName(t)}>{newFirstName}</Input>
+                        <Input size={"$3"} backgroundColor={"#D9D9D9"} color="black" onChangeText={(t) => setNewFirstName(t)}>{newFirstName}</Input>
                         <Label color={"black"}>Last Name</Label>
-                        <Input size={"$3"} onChangeText={(t) => setNewLastName(t)}>{newLastName}</Input>
+                        <Input size={"$3"} backgroundColor={"#D9D9D9"} color="black" onChangeText={(t) => setNewLastName(t)}>{newLastName}</Input>
                         <Label color={"black"}>Email</Label>
-                        <Input size={"$3"} onChangeText={(t) => setNewEmail(t)}>{newEmail}</Input>
+                        <Input size={"$3"} backgroundColor={"#D9D9D9"} color="black" onChangeText={(t) => setNewEmail(t)}>{newEmail}</Input>
                         <Form.Trigger asChild disabled={isLoading}><Button marginVertical={"$5"} icon={isLoading ? () => <Spinner /> : undefined}>
                             Save
                         </Button></Form.Trigger>
                     </Form>
-                    <Button onPress={() => signOut()}><Text>Log out</Text></Button>
+                    <Button backgroundColor="red" color="black" onPress={() => signOut()}><Text>Log out</Text></Button>
                 </YStack>
             </YStack>
         </View>

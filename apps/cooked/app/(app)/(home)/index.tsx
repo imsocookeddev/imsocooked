@@ -1,4 +1,4 @@
-import { View, Text, Button } from "tamagui";
+import { View, Button } from "tamagui";
 import { useAuth } from "@clerk/clerk-expo";
 
 export default function HomeScreen() {

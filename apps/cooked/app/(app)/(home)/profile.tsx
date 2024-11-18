@@ -1,9 +1,56 @@
-import {AlertDialog, Avatar, Button, H1, SizableText, Text, View, XStack, YStack} from "tamagui";
+import {Avatar, Button, H1, SizableText, View, XStack, YStack, Text, Input, Form, Spinner, Label} from "tamagui";
 import {useAuth} from "@clerk/clerk-expo";
+import {Redirect, router} from "expo-router";
+import {trpc} from "@/utils/trpc/client";
+import {useEffect, useState} from "react";
+import {user as Users} from "@cooked/db/schema"
 
 export default function ProfileView() {
 
-    const { signOut } = useAuth();
+    type User = typeof Users.$inferSelect;
+
+    const { userId, signOut } = useAuth();
+    if (!userId) return <Redirect href={"/(auth)/sign-in"}/>
+
+    const [user, setUser] = useState<User>();
+
+    const res = trpc.echoUserData.useQuery()
+    const updateRes = trpc.updateUserData.useMutation();
+
+    useEffect(() => {
+        if (res.isFetched) {
+            if (res.data?.message === undefined) router.replace("/(auth)/sign-in");
+            setUser(res.data?.message)
+        }
+    }, [res]);
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [newFirstName, setNewFirstName] = useState("");
+    const [newLastName, setNewLastName] = useState("");
+    const [newEmail, setNewEmail] = useState("");
+
+    useEffect(() => {
+        if (res.isFetched) {
+            if (res.data?.message === undefined) return
+            setNewFirstName(res.data?.message.firstName)
+            setNewLastName(res.data?.message.lastName)
+            setNewEmail(res.data?.message.email)
+        }
+    }, [updateRes]);
+
+    if (!user) return <Redirect href={"/(auth)/sign-in"}/>
+
+    async function onSubmit() {
+        setIsLoading(true);
+
+        const {success} = await updateRes.mutateAsync({
+            firstName: newFirstName,
+            lastName: newLastName,
+            email: newEmail,
+        })
+        if (!success) console.log("Error updating data")
+        setIsLoading(false);
+    }
 
     return (
         <View className="h-full w-full bg-[#38AA7E]">
@@ -13,65 +60,29 @@ export default function ProfileView() {
                     <Avatar circular size={"$10"}>
                         <Avatar.Image
                             accessibilityLabel={"username"}
-                            src={"https://avatars.githubusercontent.com/u/113381905?v=4&size=64"} //TODO: Change hardcode
+                            src={user.profileUrl}
                         />
                         <Avatar.Fallback backgroundColor={"$blue10"} />
                     </Avatar>
                     <YStack alignSelf={"flex-end"} marginBottom={"$2"}>
-                        <SizableText size={"$5"}>Jacob Ellerbrock</SizableText> //TODO: Change hardcode
-                        <SizableText size={"$5"}>jacob@imsocooked.org</SizableText> //TODO: Change hardcose
+                        <SizableText size={"$5"}>{user.firstName + " " + user.lastName}</SizableText>
+                        <SizableText size={"$5"}>{user.email}</SizableText>
                     </YStack>
                 </XStack>
                 <YStack backgroundColor={"#F3ECE2"} borderRadius={"$10"} minHeight={1000} paddingTop={"$8"} paddingHorizontal={"$4"} position={"relative"}>
                     <H1 color={"black"}>Account Settings</H1>
-                    <AlertDialog native>
-                        <AlertDialog.Trigger asChild>
-                            <Button width={250} height={30} alignSelf={"center"} position={"absolute"} top={480} backgroundColor={"#FE6F6C"} color={"white"}>Sign Out</Button>
-                        </AlertDialog.Trigger>
-                        <AlertDialog.Portal>
-                            <AlertDialog.Overlay
-                                key={"overlay"}
-                                animation={"quick"}
-                                opacity={0.5}
-                                enterStyle={{ opacity: 0 }}
-                                exitStyle={{ opacity: 0 }}
-                            />
-                            <AlertDialog.Content
-                                bordered
-                                elevate
-                                key="content"
-                                animation={[
-                                    'quick',
-                                    {
-                                        opacity: {
-                                            overshootClamping: true,
-                                        },
-                                    },
-                                ]}
-                                enterStyle={{ x: 0, y: -20, opacity: 0, scale: 0.9 }}
-                                exitStyle={{ x: 0, y: 10, opacity: 0, scale: 0.95 }}
-                                x={0}
-                                scale={1}
-                                opacity={1}
-                                y={0}
-                            >
-                                <YStack space>
-                                    <AlertDialog.Description>
-                                        Are you sure you want to sign out?
-                                    </AlertDialog.Description>
-                                    <XStack gap="$3" justifyContent="flex-end">
-                                        <AlertDialog.Cancel asChild>
-                                            <Button>No</Button>
-                                        </AlertDialog.Cancel>
-                                        <AlertDialog.Action asChild>
-                                            <Button onPress={() => signOut()} color={"red"}>Yes</Button>
-                                        </AlertDialog.Action>
-                                    </XStack>
-                                </YStack>
-                            </AlertDialog.Content>
-                        </AlertDialog.Portal>
-                    </AlertDialog>
-                    {/*<Button onPress={() => signOut()}>Log out</Button>*/}
+                    <Form onSubmit={onSubmit}>
+                        <Label color={"black"}>First Name</Label>
+                        <Input size={"$3"} backgroundColor={"#D9D9D9"} color="black" onChangeText={(t) => setNewFirstName(t)}>{newFirstName}</Input>
+                        <Label color={"black"}>Last Name</Label>
+                        <Input size={"$3"} backgroundColor={"#D9D9D9"} color="black" onChangeText={(t) => setNewLastName(t)}>{newLastName}</Input>
+                        <Label color={"black"}>Email</Label>
+                        <Input size={"$3"} backgroundColor={"#D9D9D9"} color="black" onChangeText={(t) => setNewEmail(t)}>{newEmail}</Input>
+                        <Form.Trigger asChild disabled={isLoading}><Button marginVertical={"$5"} icon={isLoading ? () => <Spinner /> : undefined}>
+                            Save
+                        </Button></Form.Trigger>
+                    </Form>
+                    <Button backgroundColor="red" color="black" onPress={() => signOut()}><Text>Log out</Text></Button>
                 </YStack>
             </YStack>
         </View>

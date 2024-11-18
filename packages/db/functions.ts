@@ -41,6 +41,34 @@ export async function getUser(id: string) {
   });
 }
 
+export async function updateUser({
+    id,
+    firstName,
+    lastName,
+    email
+}: {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}) {
+  let success = true;
+
+  try {
+    await db.update(user)
+        .set({
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+        })
+        .where(eq(user.userID, id))
+  } catch (e) {
+    console.error("Error occurred while inserting user data: " + e); // TODO: Verify this logic works.
+    success = false;
+  }
+  return success;
+}
+
 export async function getLessonsByCountryID(countryID: string) {
   return db.query.lesson.findMany({ where: eq(lesson.countryID, countryID) });
 }

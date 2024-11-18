@@ -4,7 +4,7 @@ import {
   createUser,
   getUser,
   getAllCountries,
-  getLessonsByCountryID,
+  getLessonsByCountryID, updateUser,
 } from "@cooked/db";
 
 const newUser = authenticatedProcedure
@@ -71,12 +71,39 @@ const echoHello = publicProcedure.query(async () => {
   return { message: "hello world from trpc" };
 });
 
-const echoUserData = authenticatedProcedure.query(({ ctx: { user } }) => {
-  const str = user.primaryEmailAddress?.emailAddress;
-  console.log(user.primaryEmailAddress?.emailAddress);
+const echoUserData = authenticatedProcedure.query(async ({ctx: {user}}) => {
+  const u = await getUser(user.id)
+  // console.log(user.primaryEmailAddress?.emailAddress);
+  console.log("user: " + u.email);
 
-  return { message: str };
+  return {message: u};
 });
+
+const updateUserData = authenticatedProcedure
+    .input(
+    z.object({
+      firstName: z.string().min(1).max(255),
+      lastName: z.string().min(1).max(255),
+      email: z.string().min(1).max(255),
+    }))
+    .mutation(async ({ input, ctx })=> {
+      const { firstName, lastName, email } = input;
+      const { id } = ctx.user;
+
+      console.log("Updating: " + firstName);
+
+      const success = await updateUser({id, firstName, lastName, email});
+
+      const message = success
+          ? "User data updated successfully!"
+          : "Unable to update user data.";
+
+      return {
+        success,
+        message,
+      };
+
+})
 
 export const appRouter = router({
   echoHello,
@@ -85,6 +112,7 @@ export const appRouter = router({
   checkExistingUser,
   getCountryList,
   getLessonsByCountry,
+  updateUserData,
 });
 
 export type AppRouter = typeof appRouter;

@@ -31,7 +31,7 @@ export default function HomeScreen() {
         >
           <View style={{ width: '30%' }}>
             <Image
-              source={require('/home/lavigne27/imsocooked/apps/cooked/assets/images/book.png')}
+              source={require("@/assets/images/book.png")}
               style={{ width: '100%', height: '80%' }} // Adjust the width to fit the images
               resizeMode="contain"  // Keeps the aspect ratio
             />
@@ -39,7 +39,7 @@ export default function HomeScreen() {
           </View>
           <View style={{ width: '30%' }}>
             <Image
-              source={require('/home/lavigne27/imsocooked/apps/cooked/assets/images/book.png')}
+              source={require("@/assets/images/book.png")}
               style={{ width: '100%', height: '80%' }}
               resizeMode="contain"
             />
@@ -47,7 +47,7 @@ export default function HomeScreen() {
           </View>
           <View style={{ width: '30%' }}>
             <Image
-              source={require('/home/lavigne27/imsocooked/apps/cooked/assets/images/book.png')}
+              source={require("@/assets/images/book.png")}
               style={{ width: '100%', height: '80%' }}
               resizeMode="contain"
             />
@@ -68,7 +68,7 @@ export default function HomeScreen() {
           {/* Card 1 */}
           <View style={{ width: '30%', marginBottom: 20 }}>
             <Image
-              source={require('/home/lavigne27/imsocooked/apps/cooked/assets/images/book.png')}
+              source={require("@/assets/images/book.png")}
               style={{ width: '100%', height: 120 }}
               resizeMode="contain"
             />
@@ -77,7 +77,7 @@ export default function HomeScreen() {
           {/* Card 2 */}
           <View style={{ width: '30%', marginBottom: 20 }}>
             <Image
-              source={require('/home/lavigne27/imsocooked/apps/cooked/assets/images/book.png')}
+              source={require("@/assets/images/book.png")}
               style={{ width: '100%', height: 120 }}
               resizeMode="contain"
             />
@@ -86,7 +86,7 @@ export default function HomeScreen() {
           {/* Card 3 */}
           <View style={{ width: '30%', marginBottom: 20 }}>
             <Image
-              source={require('/home/lavigne27/imsocooked/apps/cooked/assets/images/book.png')}
+              source={require("@/assets/images/book.png")}
               style={{ width: '100%', height: 120 }}
               resizeMode="contain"
             />

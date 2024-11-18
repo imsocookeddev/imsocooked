@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { Text } from "tamagui";
+import {Image} from "tamagui";
 import { trpc } from "@/utils/trpc/client";
 import { useUser } from "@clerk/clerk-expo";
 
@@ -45,27 +45,22 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color, focused }) => (
-            <Text color="$color.blue7Light">Home</Text>
-          ),
-        }}
+          name="index"
+          options={{
+            title: "Home",
+            tabBarIcon: ({ color, focused }) => (
+                <Image source={{uri: "https://www.figma.com/file/JiMKqhf6sFiliZrHz1yP02/image/bb54b653e182bd11af424950054c77872de9fb99", width: 30, height: 30}}/>
+            ),
+          }}
       />
       <Tabs.Screen
-        name="explore"
-        options={{
-          title: "Explore",
-          tabBarIcon: ({ color, focused }) => <Text>Explore</Text>,
-        }}
-      />
-      <Tabs.Screen
-        name={"profile"}
-        options={{
-          title: "Profile",
-          tabBarIcon: ({ color, focused }) => <Text>Profile</Text>,
-        }}
+          name={"profile"}
+          options={{
+            title: "Profile",
+            tabBarIcon: ({ color, focused }) => (
+                <Image source={{uri: "https://www.figma.com/file/JiMKqhf6sFiliZrHz1yP02/image/bf5370f0112634402ee1229ece89f240589988e0", width: 30, height: 30}} />
+            ),
+          }}
       />
     </Tabs>
   );

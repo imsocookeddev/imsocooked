@@ -3,7 +3,7 @@ import React from "react";
 
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { Text } from "tamagui";
+import {Image} from "tamagui";
 import { useUser } from "@clerk/clerk-expo";
 
 export default function TabLayout() {
@@ -26,22 +26,17 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color, focused }) => (
-            <Text color="$color.blue7Light">Home</Text>
+            <Image source={{uri: "@/assets/images/tabbar/home.png", width: 30, height: 30}} />
           ),
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: "Explore",
-          tabBarIcon: ({ color, focused }) => <Text>Explore</Text>,
         }}
       />
       <Tabs.Screen
         name={"profile"}
         options={{
           title: "Profile",
-          tabBarIcon: ({ color, focused }) => <Text>Profile</Text>,
+          tabBarIcon: ({ color, focused }) => (
+              <Image source={{uri: "@/assets/images/tabbar/profile.png"}} />
+          ),
         }}
       />
     </Tabs>

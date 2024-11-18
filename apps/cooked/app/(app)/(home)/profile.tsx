@@ -52,9 +52,6 @@ export default function ProfileView() {
         setIsLoading(false);
     }
 
-    /* TODO:
-        Change hardcode avatar, name, and email
-    * */
     return (
         <View className="h-full w-full bg-[#38AA7E]">
             <YStack gap={"$4"} marginVertical={"$4"}>
@@ -63,7 +60,7 @@ export default function ProfileView() {
                     <Avatar circular size={"$10"}>
                         <Avatar.Image
                             accessibilityLabel={"username"}
-                            src={"https://avatars.githubusercontent.com/u/113381905?v=4&size=64"}
+                            src={user.profileUrl}
                         />
                         <Avatar.Fallback backgroundColor={"$blue10"} />
                     </Avatar>

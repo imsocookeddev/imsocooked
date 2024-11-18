@@ -72,7 +72,6 @@ const echoHello = publicProcedure.query(async () => {
 });
 
 const echoUserData = authenticatedProcedure.query(async ({ctx: {user}}) => {
-  const str = user.primaryEmailAddress?.emailAddress;
   const u = await getUser(user.id)
   // console.log(user.primaryEmailAddress?.emailAddress);
   console.log("user: " + u.email);

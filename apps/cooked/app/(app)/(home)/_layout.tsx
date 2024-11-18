@@ -1,15 +1,37 @@
-import { Tabs, Redirect } from "expo-router";
-import React from "react";
+import { Redirect, Tabs, useRouter } from "expo-router";
+import React, { useEffect } from "react";
 
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Text } from "tamagui";
-import { SignedIn, SignedOut } from "@clerk/clerk-expo";
+import { trpc } from "@/utils/trpc/client";
 import { useUser } from "@clerk/clerk-expo";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const { user, isLoaded, isSignedIn } = useUser();
+  const router = useRouter();
+  const { isSignedIn } = useUser();
+  const existingQuery = trpc.checkExistingUser.useQuery(undefined, {
+    gcTime: 0,
+    staleTime: 0,
+  });
+
+  // Query server to see if user exists within the database.
+  useEffect(() => {
+    if (existingQuery.isFetched) {
+      if (existingQuery.error) {
+        if (existingQuery.error.data?.httpStatus === 401) {
+          console.error("Unable to find user");
+        } else {
+          console.error("Other error occurred" + existingQuery.error?.message);
+        }
+      }
+
+      if (existingQuery.data === false) {
+        router.push("/(app)/info");
+      }
+    }
+  }, [existingQuery]);
 
   if (!isSignedIn) {
     return <Redirect href="/(auth)/sign-in" />;
@@ -38,13 +60,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => <Text>Explore</Text>,
         }}
       />
-        <Tabs.Screen
-            name={"profile"}
-            options={{
-                title: "Profile",
-                tabBarIcon: ({ color, focused }) => <Text>Profile</Text>,
-            }}
-        />
+      <Tabs.Screen
+        name={"profile"}
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color, focused }) => <Text>Profile</Text>,
+        }}
+      />
     </Tabs>
   );
 }

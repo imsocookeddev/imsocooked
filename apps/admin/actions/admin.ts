@@ -1,10 +1,12 @@
 'use server'
 import { adminAction } from "@/lib/safe-action"
-import { createCuisineSchema } from "@cooked/db"
-import { createCuisine } from "@cooked/db"
+import { createCuisineSchema, createCountrySchemaAction } from "@cooked/db"
+import { createCuisine, createCountry } from "@cooked/db"
 import { db,eq } from "@cooked/db"
-import { cuisine } from "@cooked/db/schema"
+import { cuisine,country } from "@cooked/db/schema"
 import z from "zod"
+import { updateImageSchema } from "@cooked/db"
+
 export const createCuisineAction = adminAction
   .schema(createCuisineSchema)
   .action(async ( {parsedInput:props}) =>{
@@ -20,17 +22,38 @@ export const createCuisineAction = adminAction
   });
 
 export const updateCuisineImageAction = adminAction
-.schema(z.object({
-  id:z.string().min(1).max(100),
-  imageUrl:z.string().min(1).max(500)
-}))
-.action(async ({ parsedInput:{
+.schema(updateImageSchema)
+.action(async ({parsedInput:{
   id, imageUrl
 }})=>{
   await db.update(cuisine).set({
     imageUrl
   }).where(eq(cuisine.cuisineID,id));
 
+  return {
+    success:true
+  }
+});
+
+export const createCountryAction = adminAction
+  .schema(createCountrySchemaAction)
+  .action(async ({parsedInput:props}) =>{
+    console.log('props',props);
+    const id = await createCountry(props);
+    return{
+      success:true,
+      id
+    }
+  });
+
+export const updateCountryImageAction = adminAction
+.schema(updateImageSchema)
+.action(async ({parsedInput:{
+  id, imageUrl
+}})=>{
+  await db.update(country).set({
+    imageUrl
+  }).where(eq(country.countryID,id));
   return {
     success:true
   }

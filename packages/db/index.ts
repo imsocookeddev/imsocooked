@@ -5,6 +5,7 @@ export * from "drizzle-orm";
 export * from "./functions";
 export * from "./zod";
 export * from "./types";
+export * from "./websocket"
 
 const sql = neon(process.env.DATABASE_URL!);
 

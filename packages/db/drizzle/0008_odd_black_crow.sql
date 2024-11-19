@@ -1,0 +1,1 @@
+ALTER TABLE "country" ADD COLUMN IF NOT EXISTS "cuisineID" varchar(255) NOT NULL;

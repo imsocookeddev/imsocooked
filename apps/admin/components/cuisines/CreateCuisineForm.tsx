@@ -22,6 +22,7 @@ import {
   createCuisineAction as runCreateCuisineAction,
 } from "@/actions/admin";
 import { Loader2 } from "lucide-react"
+import { Textarea } from "../ui/textarea"
 
 export default function CreateCuisineForm(){
   const [isLoading,setIsLoading] = useState(false);
@@ -58,7 +59,8 @@ export default function CreateCuisineForm(){
     }
     setIsLoading(false);
     alert("Cuisine created successfully! Redirecting...");
-    push(`/cuisines/${id}`);
+    // push(`/cuisines/${id}`);
+    push(`/cuisines`);
   }
 
   return (
@@ -88,7 +90,7 @@ export default function CreateCuisineForm(){
                 <FormItem>
                   <FormLabel>Cuisine Description</FormLabel>
                   <FormControl>
-                    <Input
+                    <Textarea
                       placeholder="Description of Cuisine here"
                       {...field}
                     />

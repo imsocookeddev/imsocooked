@@ -1,6 +1,11 @@
 import {createInsertSchema, createSelectSchema} from "drizzle-zod";
-import { cuisine} from "./schema";
+import { cuisine, country} from "./schema";
 import z from "zod";
+
+export const updateImageSchema = z.object({
+  id:z.string().min(1).max(100),
+  imageUrl:z.string().min(1).max(500)
+});
 
 export const createCuisineSchema = createInsertSchema(cuisine,{
   cuisineName:z.string().min(1).max(100),
@@ -8,3 +13,15 @@ export const createCuisineSchema = createInsertSchema(cuisine,{
 }).omit({
   cuisineID:true,
 });
+
+export const createCountrySchemaForm = createInsertSchema(country,{
+  countryName:z.string().min(1).max(100),
+}).omit({
+  countryID:true,
+});
+
+export const createCountrySchemaAction = createCountrySchemaForm.extend({
+  cuisinesToCountry: z.array(z.string())
+})
+
+export const selectCountriesSchema = createSelectSchema(country).array();

@@ -1,1 +1,21 @@
 export type SearchParams = { [key: string]: string | undefined };
+import { type ControllerRenderProps, Field, FieldValues, FieldPath, Path  } from "react-hook-form";
+
+export type GeneralDropDownType = {
+  id: string;
+  name: string;
+};
+
+type ModifiedControllerRenderProps<TFieldValues extends FieldValues, TName extends Path<TFieldValues>> = Omit<
+  ControllerRenderProps<TFieldValues, TName>,
+  "value"
+> & {
+  value: string[];
+};
+
+
+export type GeneralSelectorProps = {
+  renderProps: ModifiedControllerRenderProps<any,string>;
+  options: GeneralDropDownType[];
+  name: string;
+};

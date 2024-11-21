@@ -1,4 +1,4 @@
-import { 
+import {
   varchar,
   serial,
   pgTable,
@@ -12,8 +12,8 @@ import {
 import { relations } from "drizzle-orm";
 import c from "../config";
 
-export const userRoles = pgEnum('roles',c.roles);
-export const problemTypes = pgEnum('problem_types',c.problem_types);
+export const userRoles = pgEnum("roles", c.roles);
+export const problemTypes = pgEnum("problem_types", c.problem_types);
 
 // Users table
 export const user = pgTable("user", {
@@ -24,100 +24,98 @@ export const user = pgTable("user", {
   username: varchar({ length: 255 }).notNull().unique(),
   role: userRoles().notNull().default("user"),
   joinedOn: timestamp().defaultNow(),
-  profileUrl: text()
-    .notNull()
-    .default("https://www.gravatar.com/avatar/"),
+  profileUrl: text().notNull().default("https://www.gravatar.com/avatar/"),
   hearts: integer().notNull().default(5),
 });
 
 // Fields and references are used to describe relations when the relation depends on a non-primary key value
 // user relations
-export const userRelations = relations(user,
-  ({many}) =>({
-    countriesProgress: many(countryProgress),
-    cuisinesProgress: many(cuisineProgress),
-    problemCompletion: many(problemCompletion),
-  }));
+export const userRelations = relations(user, ({ many }) => ({
+  countriesProgress: many(countryProgress),
+  cuisinesProgress: many(cuisineProgress),
+  problemCompletion: many(problemCompletion),
+}));
 
 // cuisines table
-export const cuisine = pgTable('cuisine',{
+export const cuisine = pgTable("cuisine", {
   cuisineID: uuid().defaultRandom().primaryKey(),
-  cuisineName: varchar({length:255}).notNull(),
+  cuisineName: varchar({ length: 255 }).notNull(),
   imageUrl: text().notNull(),
   cuisineDescription: text().notNull(),
 });
 
 // cuisine relations
-export const cuisineRelations = relations(cuisine,
-  ({many}) =>({
-    countriesToCuisines: many(cuisinesToCountries),
-    cuisinesProgress: many(cuisineProgress),
-    lessons: many(lesson),
-  }));
+export const cuisineRelations = relations(cuisine, ({ many }) => ({
+  countriesToCuisines: many(cuisinesToCountries),
+  cuisinesProgress: many(cuisineProgress),
+  lessons: many(lesson),
+}));
 
 // cuisineProgress table
-export const cuisineProgress = pgTable('cuisine_progress',{
+export const cuisineProgress = pgTable("cuisine_progress", {
   id: serial().primaryKey(),
-  cuisineID: varchar({length:255}).notNull(),
-  userID: varchar({length:255}).notNull(),
+  cuisineID: uuid().notNull(),
+  userID: varchar({ length: 255 }).notNull(),
   progress: real().notNull().default(0),
 });
 
 // cuisineProgress relations
-export const cuisineProgressRelations = relations(cuisineProgress,
-  ({one}) => ({
-    cuisines: one(cuisine,{
+export const cuisineProgressRelations = relations(
+  cuisineProgress,
+  ({ one }) => ({
+    cuisines: one(cuisine, {
       fields: [cuisineProgress.cuisineID],
       references: [cuisine.cuisineID],
     }),
-    users: one(user,{
+    users: one(user, {
       fields: [cuisineProgress.userID],
       references: [user.userID],
     }),
-  }));
+  }),
+);
 
 // Countries
-export const country = pgTable('country',{
+export const country = pgTable("country", {
   countryID: uuid().defaultRandom().primaryKey(),
-  countryName: varchar({length:255}).notNull(),
+  countryName: varchar({ length: 255 }).notNull(),
   imageUrl: text().notNull(),
 });
 
 // country relations
-export const countryRelations = relations(country,
-  ({many}) =>({
-    cuisinesToCountries: many(cuisinesToCountries),
-    lessons: many(lesson),
-    countryProgress: many(countryProgress),
-  }));
+export const countryRelations = relations(country, ({ many }) => ({
+  cuisinesToCountries: many(cuisinesToCountries),
+  lessons: many(lesson),
+  countryProgress: many(countryProgress),
+}));
 
 // countryProgress table
-export const countryProgress = pgTable('country_progress',{
+export const countryProgress = pgTable("country_progress", {
   id: serial().primaryKey(),
-  cuisineID: varchar({length:255}).notNull(),
-  countryID: varchar({length:255}).notNull(),
-  userID: varchar({length:255}).notNull(),
+  countryID: uuid().notNull(),
+  userID: varchar({ length: 255 }).notNull(),
   progress: real().notNull().default(0),
 });
 
 // countryProgress relations
-export const countryProgressRelations = relations(countryProgress,
-  ({one}) =>({
-    countries: one(country,{
+export const countryProgressRelations = relations(
+  countryProgress,
+  ({ one }) => ({
+    countries: one(country, {
       fields: [countryProgress.countryID],
       references: [country.countryID],
     }),
-    users: one(user,{
+    users: one(user, {
       fields: [countryProgress.userID],
       references: [user.userID],
     }),
-  }));
+  }),
+);
 
 // cuisinesToCountries table
 export const cuisinesToCountries = pgTable("cuisines_to_countries", {
   id: serial().primaryKey(),
-  cuisineID: varchar({ length: 255 }).notNull(),
-  countryID: varchar({ length: 255 }).notNull(),
+  cuisineID: uuid().notNull(),
+  countryID: uuid().notNull(),
 });
 
 //cuinesToCountries relations
@@ -128,101 +126,105 @@ export const cuisinesToCountriesRelations = relations(
       fields: [cuisinesToCountries.countryID],
       references: [country.countryID],
     }),
-    cuisines: one(cuisine,{
+    cuisines: one(cuisine, {
       fields: [cuisinesToCountries.cuisineID],
       references: [cuisine.cuisineID],
     }),
-  })
+  }),
 );
 
 // lessons table
 export const lesson = pgTable("lesson", {
   lessonID: uuid().defaultRandom().primaryKey(),
-  countryID: varchar({ length: 255 }).notNull(),
+  countryID: uuid().notNull(),
   title: varchar({ length: 255 }).notNull(),
-  cuisineID: varchar({ length: 255 }).notNull(),
+  cuisineID: uuid().notNull(),
   problemOrder: uuid().array().notNull(),
   recipeUrl: text().notNull(),
 });
 
 // // lesson relations
-export const lessonRelations = relations(lesson,
-  ({one}) => ({
-    countries: one(country,{
-      fields: [lesson.countryID],
-      references: [country.countryID],
-    }),
-    cuisines:one(cuisine,{
-      fields: [lesson.cuisineID],
-      references: [cuisine.cuisineID],
-    })
-  }));
+export const lessonRelations = relations(lesson, ({ one }) => ({
+  countries: one(country, {
+    fields: [lesson.countryID],
+    references: [country.countryID],
+  }),
+  cuisines: one(cuisine, {
+    fields: [lesson.cuisineID],
+    references: [cuisine.cuisineID],
+  }),
+}));
 
 // Problems table
-export const problem = pgTable('problem',{
+export const problem = pgTable("problem", {
   problemID: uuid().defaultRandom().primaryKey(),
-  prompt: varchar({length:255}).notNull(),
+  prompt: varchar({ length: 255 }).notNull(),
   problemType: problemTypes().notNull(),
   categoryID: integer().notNull(),
   // do we need the content?
-  correctAnswer: varchar({length:255}).notNull(),
+  correctAnswer: varchar({ length: 255 }).notNull(),
 });
 
 // problem relations
-export const problemsRelations = relations(problem,
-  ({many}) =>({
-    problemCompletion: many(problemCompletion),
-    problemsToCategories: many(problemsToCategories),
-  }));
+export const problemsRelations = relations(problem, ({ many }) => ({
+  problemCompletion: many(problemCompletion),
+  problemsToCategories: many(problemsToCategories),
+}));
 
 // problems completions table
-export const problemCompletion = pgTable('problem_completion',{
+export const problemCompletion = pgTable("problem_completion", {
   id: serial().primaryKey(),
-  problemID: varchar({length:255}).notNull(),
-  userID: varchar({length:255}).notNull(),
+  problemID: varchar({ length: 255 }).notNull(),
+  userID: varchar({ length: 255 }).notNull(),
 });
 
 // problem completion relations
-export const problemCompletionRelations = relations(problemCompletion,
-  ({one}) => ({
-    users: one(user,{
+export const problemCompletionRelations = relations(
+  problemCompletion,
+  ({ one }) => ({
+    users: one(user, {
       fields: [problemCompletion.userID],
       references: [user.userID],
     }),
-    problems: one(problem,{
+    problems: one(problem, {
       fields: [problemCompletion.problemID],
       references: [problem.problemID],
     }),
-}));
+  }),
+);
 
 // problem category table
-export const problemCategory = pgTable('problem_category',{
+export const problemCategory = pgTable("problem_category", {
   categoryID: serial().primaryKey(),
-  categoryName: varchar({length:255}).notNull(),
+  categoryName: varchar({ length: 255 }).notNull(),
 });
 
 // problem category relations
-export const problemCategoryRelations = relations(problemCategory,
-  ({many}) =>({
+export const problemCategoryRelations = relations(
+  problemCategory,
+  ({ many }) => ({
     problemsToCategories: many(problemsToCategories),
-  }));
+  }),
+);
 
 // problemsToCategories table
-export const problemsToCategories = pgTable('problems_to_categories',{
+export const problemsToCategories = pgTable("problems_to_categories", {
   id: serial().primaryKey(),
-  problemID: varchar({length:255}).notNull(),
+  problemID: varchar({ length: 255 }).notNull(),
   categoryID: integer().notNull(),
 });
 
 // problemsToCategories relations
-export const problemsToCategoriesRelations = relations(problemsToCategories,
-  ({one}) =>({
-    problems: one(problem,{
+export const problemsToCategoriesRelations = relations(
+  problemsToCategories,
+  ({ one }) => ({
+    problems: one(problem, {
       fields: [problemsToCategories.problemID],
       references: [problem.problemID],
     }),
-    categories: one(problemCategory,{
+    categories: one(problemCategory, {
       fields: [problemsToCategories.categoryID],
       references: [problemCategory.categoryID],
     }),
-  }));
+  }),
+);

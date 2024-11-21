@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import {Image} from "tamagui";
+import { Image } from "tamagui";
 import { trpc } from "@/utils/trpc/client";
 import { useUser } from "@clerk/clerk-expo";
 
@@ -23,7 +23,7 @@ export default function TabLayout() {
         if (existingQuery.error.data?.httpStatus === 401) {
           console.error("Unable to find user");
         } else {
-          console.error("Other error occurred" + existingQuery.error?.message);
+          console.error("Other error occurred " + existingQuery.error?.message);
         }
       }
 
@@ -45,32 +45,50 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-          name="index"
-          options={{
-            title: "Home",
-            tabBarIcon: ({ color, focused }) => (
-                <Image source={{uri: "https://www.figma.com/file/JiMKqhf6sFiliZrHz1yP02/image/bb54b653e182bd11af424950054c77872de9fb99", width: 30, height: 30}}/>
-            ),
-          }}
+        name="index"
+        options={{
+          title: "Home",
+          tabBarIcon: ({ color, focused }) => (
+            <Image
+              source={{
+                uri: "https://www.figma.com/file/JiMKqhf6sFiliZrHz1yP02/image/bb54b653e182bd11af424950054c77872de9fb99",
+                width: 30,
+                height: 30,
+              }}
+            />
+          ),
+        }}
       />
       <Tabs.Screen
-          name={"profile"}
-          options={{
-            title: "Profile",
-            tabBarIcon: ({ color, focused }) => (
-                <Image source={{uri: "https://www.figma.com/file/JiMKqhf6sFiliZrHz1yP02/image/bf5370f0112634402ee1229ece89f240589988e0", width: 30, height: 30}} />
-            ),
-          }}
+        name={"profile"}
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color, focused }) => (
+            <Image
+              source={{
+                uri: "https://www.figma.com/file/JiMKqhf6sFiliZrHz1yP02/image/bf5370f0112634402ee1229ece89f240589988e0",
+                width: 30,
+                height: 30,
+              }}
+            />
+          ),
+        }}
       />
-        <Tabs.Screen
-            name={"explore"}
-            options={{
-                title: "Explore",
-                tabBarIcon: ({ color, focused }) => (
-                    <Image source={{uri: "https://www.figma.com/file/JiMKqhf6sFiliZrHz1yP02/image/312e2d36281514c5d264245a27844c53f253284b", width: 30, height: 30}} />
-                ),
-            }}
-        />
+      <Tabs.Screen
+        name={"explore"}
+        options={{
+          title: "Explore",
+          tabBarIcon: ({ color, focused }) => (
+            <Image
+              source={{
+                uri: "https://www.figma.com/file/JiMKqhf6sFiliZrHz1yP02/image/312e2d36281514c5d264245a27844c53f253284b",
+                width: 30,
+                height: 30,
+              }}
+            />
+          ),
+        }}
+      />
     </Tabs>
   );
 }

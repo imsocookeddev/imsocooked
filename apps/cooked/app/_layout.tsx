@@ -65,7 +65,9 @@ export default function RootLayout() {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: "https://imsocooked.loca.lt/api/trpc", // TODO: Change this to be sourced by config file at some point.
+          url:
+            process.env.EXPO_PUBLIC_API_URL ??
+            "https://imsocooked.loca.lt/api/trpc", // TODO: Change this to be sourced by config file at some point.
 
           headers() {
             const token = getClerkInstance({ tokenCache }).user?.id;

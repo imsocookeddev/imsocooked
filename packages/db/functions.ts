@@ -1,5 +1,5 @@
 import { db, eq, and } from ".";
-import { user, lesson } from "./schema";
+import { user, lesson, cuisineProgress, cuisine } from "./schema";
 import c from "@cooked/config";
 
 export async function createUser({
@@ -42,10 +42,10 @@ export async function getUser(id: string) {
 }
 
 export async function updateUser({
-    id,
-    firstName,
-    lastName,
-    email
+  id,
+  firstName,
+  lastName,
+  email,
 }: {
   id: string;
   firstName: string;
@@ -55,13 +55,14 @@ export async function updateUser({
   let success = true;
 
   try {
-    await db.update(user)
-        .set({
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-        })
-        .where(eq(user.userID, id))
+    await db
+      .update(user)
+      .set({
+        firstName,
+        lastName,
+        email,
+      })
+      .where(eq(user.userID, id));
   } catch (e) {
     console.error("Error occurred while inserting user data: " + e); // TODO: Verify this logic works.
     success = false;
@@ -69,8 +70,34 @@ export async function updateUser({
   return success;
 }
 
-export async function getLessonsByCountryID(countryID: string) {
-  return db.query.lesson.findMany({ where: eq(lesson.countryID, countryID) });
+export async function getAllCuisines() {
+  return db.query.cuisine.findMany();
+}
+
+export async function getCuisineByCuisineID(id: string) {
+  return db.query.cuisine.findFirst({ where: eq(cuisine.cuisineID, id) });
+}
+
+export async function getInProgressCuisines(userID: string) {
+  try {
+    const progressForUser = await db.query.cuisineProgress.findMany({
+      where: eq(cuisineProgress.userID, userID),
+      with: {
+        cuisines: true,
+      },
+    });
+
+    const cuisines = progressForUser.map((progress) => progress.cuisines);
+    return cuisines;
+  } catch (e) {
+    // Only reaches this when schema issues occur.
+    console.error(e);
+    return [];
+  }
+}
+
+export async function getLessonsByCuisineID(cuisineID: string) {
+  return db.query.lesson.findMany({ where: eq(lesson.cuisineID, cuisineID) });
 }
 
 export async function getAdminUser(id: string) {

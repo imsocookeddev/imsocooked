@@ -1,6 +1,6 @@
 import { db,eq,and } from ".";
-import { cuisine, user,cuisinesToCountries, country } from "./schema";
-import { CreateCuisineProps,CreateCountryActionProps } from "./types";
+import { cuisine, user,cuisinesToCountries, country, problem } from "./schema";
+import { CreateCuisineProps,CreateCountryActionProps,problemType } from "./types";
 import { getDbWebSocket } from ".";
 
 export async function getUser(id:string){
@@ -67,4 +67,28 @@ export async function addCuisinesToCountry(countryID:string,cuisineIDs:string[])
 
 export async function getAllProblemCategories(){
   return db.query.problemCategory.findMany();
+}
+
+export async function getAllProblems(){
+  return db.query.problem.findMany({
+    with:{
+      problemsToCategories:{
+        with:{
+          problems:true
+        }
+      }
+    }
+  });
+}
+
+export function bucketSortProblems(problems:problemType[]){
+  const buckets = new Map();
+  for (const problem of problems){
+    const bucket = problem.categoryID;
+    if (!buckets.has(bucket)){
+      buckets.set(bucket,[]);
+    }
+    buckets.get(bucket).push(problem);
+  }
+  return buckets;
 }

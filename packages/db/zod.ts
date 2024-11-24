@@ -1,5 +1,5 @@
 import {createInsertSchema, createSelectSchema} from "drizzle-zod";
-import { cuisine, country, problemCategory} from "./schema";
+import { cuisine, country, problemCategory, problem} from "./schema";
 import z from "zod";
 
 export const updateImageSchema = z.object({
@@ -27,3 +27,5 @@ export const createCountrySchemaAction = createCountrySchemaForm.extend({
 export const selectCountriesSchema = createSelectSchema(country).array();
 
 export const selectProblemCategorySchema = createSelectSchema(problemCategory);
+
+export const selectProblemsSchema = createSelectSchema(problem).merge(selectProblemCategorySchema);

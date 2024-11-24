@@ -7,6 +7,9 @@ import { cuisine,country,problemCategory } from "@cooked/db/schema"
 import z from "zod"
 import { updateImageSchema } from "@cooked/db"
 import { revalidatePath } from "next/cache"
+
+
+// Cuisine actions  
 export const createCuisineAction = adminAction
   .schema(createCuisineSchema)
   .action(async ( {parsedInput:props}) =>{
@@ -35,6 +38,23 @@ export const updateCuisineImageAction = adminAction
   }
 });
 
+export const deleteCuisineAction = adminAction.schema(
+  z.object({
+    id: z.string().min(1).max(100),
+  })
+)
+.action(async ({parsedInput:{
+  id
+}})=>{
+  await db.delete(cuisine).where(eq(cuisine.cuisineID,id));
+  revalidatePath("/cuisines");
+  return {
+    success:true
+  }
+});
+
+
+// Country actions
 export const createCountryAction = adminAction
   .schema(createCountrySchemaAction)
   .action(async ({parsedInput:props}) =>{
@@ -59,6 +79,22 @@ export const updateCountryImageAction = adminAction
   }
 });
 
+export const deleteCountryAction = adminAction.schema(
+  z.object({
+    id: z.string().min(1).max(100),
+  })
+)
+.action(async ({parsedInput:{
+  id
+  }})=>{
+    await db.delete(country).where(eq(country.countryID,id));
+    revalidatePath("/countries");
+    return {
+      success:true
+    }
+  });
+
+// Problem Category actions
 export const deleteProblemCategoryAction = adminAction
 .schema(z.object({
   id:z.number().positive()
@@ -104,3 +140,7 @@ export const createProblemCategoryAction = adminAction
     success:true,
   }
 });
+
+// Problem actions
+
+

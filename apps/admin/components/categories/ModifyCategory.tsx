@@ -80,7 +80,7 @@ export default function ModifyCategory(category:{category:problemCategoryType}){
         value={setConfirmDeletion ? "Are you sure?" : value}
         onChange={(e) => setValue(e.target.value)}
         disabled={!isEditing}
-        className={`border-r-transparent rounded-r-none text-2xl focus:border-transparent border ${setConfirmDeletion && "text-red-500"}`}
+        className={`border-r-transparent rounded-r-none text-2xl focus:border-transparent ${setConfirmDeletion && "text-red-500"}`}
       />
       {(isEditing || setConfirmDeletion) && (
         <Check

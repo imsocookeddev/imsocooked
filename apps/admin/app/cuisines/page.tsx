@@ -3,7 +3,7 @@ import BasicLoader from "@/components/shared/Loader";
 import CuisinesOverview from "@/components/cuisines/CuisinesOverview";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { PlusCircle} from "lucide-react"
+import { PlusCircle } from "lucide-react";
 
 export default function CuisinesPage() {
   return (
@@ -11,7 +11,7 @@ export default function CuisinesPage() {
       <div className="w-full flex flex-row justify-center">
         <div className="flex flex-row justify-between w-[90%] mt-[2%]">
           <h1 className="font-black text-5xl">Cuisines</h1>
-          <Link href="/cuisines/new" >
+          <Link href="/cuisines/new">
             <Button className="flex flex-row justify-between py-2">
               <PlusCircle />
               Create New Cuisine
@@ -27,3 +27,7 @@ export default function CuisinesPage() {
     </main>
   );
 }
+
+export const runtime = "edge";
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";

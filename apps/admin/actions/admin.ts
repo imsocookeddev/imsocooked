@@ -3,10 +3,10 @@ import { adminAction } from "@/lib/safe-action"
 import { createCuisineSchema, createCountrySchemaAction } from "@cooked/db"
 import { createCuisine, createCountry } from "@cooked/db"
 import { db,eq } from "@cooked/db"
-import { cuisine,country } from "@cooked/db/schema"
+import { cuisine,country,problemCategory } from "@cooked/db/schema"
 import z from "zod"
 import { updateImageSchema } from "@cooked/db"
-
+import { revalidatePath } from "next/cache"
 export const createCuisineAction = adminAction
   .schema(createCuisineSchema)
   .action(async ( {parsedInput:props}) =>{
@@ -56,5 +56,51 @@ export const updateCountryImageAction = adminAction
   }).where(eq(country.countryID,id));
   return {
     success:true
+  }
+});
+
+export const deleteProblemCategoryAction = adminAction
+.schema(z.object({
+  id:z.number().positive()
+}))
+.action(async ({parsedInput:{
+  id
+}})=>{
+  await db.delete(problemCategory).where(eq(problemCategory.categoryID,id));
+  revalidatePath("/categories");
+  return {
+    success:true
+  }
+});
+
+export const updateProblemCategoryAction = adminAction
+.schema(z.object({
+  id:z.number().positive(),
+  name:z.string().min(1).max(255)
+}))
+.action(async ({parsedInput:{
+  id,name
+}})=>{
+  await db.update(problemCategory).set({
+    categoryName:name
+  }).where(eq(problemCategory.categoryID,id));
+  return {
+    success:true
+  }
+});
+
+export const createProblemCategoryAction = adminAction
+.schema(z.object({
+  name:z.string().min(1).max(255)
+}))
+.action(async ({parsedInput:{
+  name
+}})=>{
+  await db.insert(problemCategory).values({
+    categoryName:name
+  }).returning({id:problemCategory.categoryID});
+  revalidatePath("/categories");
+  return {
+    success:true,
   }
 });

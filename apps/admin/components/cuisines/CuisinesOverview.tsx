@@ -1,6 +1,9 @@
 import { getAllCuisines } from "@cooked/db";
 import GeneralViewCard from "../shared/GeneralViewCard";
+import { unstable_noStore as noStore} from "next/cache";
+
 export default async function CuisinesOverview(){
+  noStore();
   const cuisines = await getAllCuisines();
   
   return (

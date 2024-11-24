@@ -64,3 +64,7 @@ export async function addCuisinesToCountry(countryID:string,cuisineIDs:string[])
     countryID
   })));
 }
+
+export async function getAllProblemCategories(){
+  return db.query.problemCategory.findMany();
+}

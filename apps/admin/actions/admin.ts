@@ -1,13 +1,18 @@
 'use server'
 import { adminAction } from "@/lib/safe-action"
-import { createCuisineSchema, createCountrySchemaAction } from "@cooked/db"
-import { createCuisine, createCountry } from "@cooked/db"
+import {
+  createCuisineSchema,
+  createCountrySchemaAction,
+  createProblemSchema,
+  updateImageSchema,
+  validateProblemType
+} from "@cooked/db";
+import { createCuisine, createCountry,getDbWebSocket } from "@cooked/db"
 import { db,eq } from "@cooked/db"
-import { cuisine,country,problemCategory } from "@cooked/db/schema"
+import { cuisine,country,problemCategory,problem,problemsToCategories } from "@cooked/db/schema"
 import z from "zod"
-import { updateImageSchema } from "@cooked/db"
 import { revalidatePath } from "next/cache"
-
+import { returnValidationErrors } from "next-safe-action";
 
 // Cuisine actions  
 export const createCuisineAction = adminAction
@@ -142,5 +147,35 @@ export const createProblemCategoryAction = adminAction
 });
 
 // Problem actions
+export const createProblem = adminAction
+.schema(createProblemSchema)
+.action(async ({parsedInput:props})=>{
+  // We need to parse and validate the type of the problem
+  const { categoryName, ...problemsProps } = props;
+  const {message, reason, success} = validateProblemType(categoryName,problemsProps.problemContent,problemsProps.correctAnswer)
+  if (!success){
+    returnValidationErrors(createProblemSchema, {
+      _errors: [`Reason is: ${reason} and error message is: ${message}`],
+    });
+  }
+  
+  const dbWebsocket = getDbWebSocket();
+  const res = await dbWebsocket.transaction(async (tx)=>{
+    const insertProblemResult = await tx.insert(problem).values({
+      ...problemsProps
+    }).returning({problemID:problem.problemID, categoryID:problem.categoryID});
 
+    const problemsToCategoriesValues = insertProblemResult[0]!;
+
+    await tx.insert(problemsToCategories).values({
+      ...problemsToCategoriesValues
+    });
+    return problemsToCategoriesValues.problemID;
+  });
+  return {
+    success: true,
+    id: res,
+  };
+
+});
 

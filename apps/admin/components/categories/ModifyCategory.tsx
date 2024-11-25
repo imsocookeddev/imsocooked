@@ -1,5 +1,5 @@
 'use client'
-import { type problemCategoryType } from "@cooked/db/types";
+import { type ProblemCategoryType } from "@cooked/db/types";
 import { useState } from "react";
 import { Input } from "../ui/input";
 import {
@@ -24,7 +24,7 @@ import { useAction} from "next-safe-action/hooks"
 import { is } from "@cooked/db";
 import { set } from "zod";
 
-export default function ModifyCategory(category:{category:problemCategoryType}){
+export default function ModifyCategory(category:{category:ProblemCategoryType}){
   const [isEditing, setIsEditing] = useState(false);
   const [setConfirmDeletion, setSetConfirmDeletion] = useState(false);
   const { category: {

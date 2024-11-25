@@ -3,7 +3,7 @@ import { cuisine, user,cuisinesToCountries, country, problem, lesson } from "./s
 import { CreateCuisineProps,CreateCountryActionProps,problemType } from "./types";
 import { getDbWebSocket } from ".";
 import c from "@cooked/config";
-
+import z from "zod"
 export async function createUser({
   id,
   firstName,
@@ -145,6 +145,9 @@ export async function getAllProblems(){
   });
 }
 
+
+
+// Helpers 
 export function bucketSortProblems(problems:problemType[]){
   const buckets = new Map();
   for (const problem of problems){
@@ -155,4 +158,62 @@ export function bucketSortProblems(problems:problemType[]){
     buckets.get(bucket).push(problem);
   }
   return buckets;
+}
+
+// Implementing from the Durstenfeld shuffle algorithm
+function shuffleArray(array:any[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const randomIndex = Math.floor(Math.random() * (i + 1));
+    [array[i], array[randomIndex]] = [array[randomIndex], array[i]]; // Swap elements
+  }
+}
+
+export function validateProblemType(problemType:string,problemContent:string, problemAnswer:string){
+  const categoryValidatorMapper = c.problemTypes;
+  type CategoryValidatorType = typeof categoryValidatorMapper
+  const hasValue = problemType in categoryValidatorMapper
+  if (!hasValue){
+    return {
+      success:false,
+      message:`Problem Type Validation not implemented for ${problemType}`,
+      reason:"problemType"
+    }
+  }
+  const problem = categoryValidatorMapper[problemType as keyof CategoryValidatorType];
+  try{
+    const parsedContent = JSON.parse(problemContent);
+    const parsedContentResults = problem.contentSchema.safeParse(parsedContent);
+    if (!parsedContentResults.success){
+      console.error("Failed parse on content. Error is: ",parsedContentResults.error);
+      return {
+        success: false,
+        message:`Failed parse on content. Error is: ${parsedContentResults.error}`,
+        reason:"problemContent"
+      };
+    }
+    const parsedAnswer = JSON.parse(problemAnswer);
+    const parsedAnswerResults = problem.answerSchema.safeParse(parsedAnswer);
+    if (!parsedAnswerResults.success){
+      console.error("Failed parse on the answer. Error is: ",parsedAnswerResults.error);
+      return {
+        success: false,
+        message: `Failed parse on the answer. Error is: ${parsedAnswerResults.error}`,
+        reason:"problemAnswer"
+      };
+    }
+  }
+  catch(e){
+    console.error("An error occured.",e);
+    return {
+        success: false,
+        message: `Failed JSON parse. Error is: ${e}`,
+        reason:"parseError"
+      };
+  }
+  return {
+    success:true,
+    message:"Parse and validation successful!",
+    reason:"No errors present."
+  };
+  
 }

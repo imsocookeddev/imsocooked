@@ -1,3 +1,4 @@
+import z from "zod";
 export default {
   name: "I'm So Cooked",
   admin: {
@@ -12,12 +13,33 @@ export default {
     ],
   },
   roles: ["user", "admin"],
-  problem_types: [
-    "mulitple_choice",
-    "drag-n-drop",
-    "matching",
-    "single_word_response",
-  ],
+  problemTypes: {
+      "mulitple_choice":{
+        name:"Multiple Choice",
+        contentSchema:z.string().array().min(1),
+        answerSchema:z.string().min(1),
+      },
+    
+      "drag-n-drop":{
+        name:"Drag and Drop",
+        contentSchema:z.string().array().min(1),
+        answerSchema:z.string().min(1),
+      },
+      "matching":{
+        name:"Matching",
+        contentSchema:z.object({
+          left:z.string().array().min(1),
+          right:z.string().array().min(1),
+        }),
+        answerSchema:z.record(z.string().min(1),z.string().min(1)),
+      },
+      "single_word_response":{
+        name:"Single Word Response",
+        // This one really does not need a content schema
+        contentSchema:z.string().min(1),
+        answerSchema:z.string().min(1),
+      },
+    },
   defaultHearts: 5,
   defaultImageURL:"https://cpsaxb6waydelzll.public.blob.vercel-storage.com/kitty-UVMd9CJBBFxJ1MUifj0lysaqPkUGUT.jpeg"
 } as const;

@@ -13,7 +13,10 @@ import { relations } from "drizzle-orm";
 import c from "../config";
 
 export const userRoles = pgEnum("roles", c.roles);
-export const problemTypes = pgEnum("problem_types", c.problem_types);
+const problemTypesConfig = Object.keys(c.problemTypes) as
+  | readonly [string, ...string[]]
+  | [string, ...string[]];
+export const problemTypes = pgEnum("problem_types",problemTypesConfig);
 
 // Users table
 export const user = pgTable("user", {
@@ -165,8 +168,8 @@ export const problem = pgTable("problem", {
   prompt: varchar({ length: 255 }).notNull(),
   problemType: problemTypes().notNull(),
   categoryID: integer().notNull(),
-  // do we need the content?
-  correctAnswer: varchar({ length: 255 }).notNull(),
+  problemContent: text().notNull(), //This data will be stringified JSON
+  correctAnswer: text().notNull(), //This data will be stringified JSON
 });
 
 // problem relations

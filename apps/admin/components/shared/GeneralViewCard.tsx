@@ -4,7 +4,7 @@ import Image from "next/image";
 type GeneralViewcardProps = {
   name:string,
   id:string,
-  imgUrl:string
+  imgUrl?:string
 }
 export default async function GeneralViewCard(props:GeneralViewcardProps){
   const { name, id, imgUrl} = props;
@@ -17,7 +17,8 @@ export default async function GeneralViewCard(props:GeneralViewcardProps){
           <p className="w-full text-end text-xs">{id}</p>
         </CardHeader>
         <CardContent>
-          <CardDescription className="text-3xl flex flex-row justify-between">
+          {imgUrl && (
+            <CardDescription className="text-3xl flex flex-row justify-between">
             <Image
               src={imgUrl}
               alt={name}
@@ -26,7 +27,7 @@ export default async function GeneralViewCard(props:GeneralViewcardProps){
               className="rounded-full"
             />
             {name}
-          </CardDescription>
+          </CardDescription>)}
         </CardContent>
       </Card>
     </Link>

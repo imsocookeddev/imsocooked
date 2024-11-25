@@ -1,15 +1,18 @@
 'use server'
 import { adminAction } from "@/lib/safe-action"
 import {
+  db,
+  eq,
   createCuisineSchema,
   createCountrySchemaAction,
   createProblemSchema,
   updateImageSchema,
-  validateProblemType
+  validateProblemType,
+  createLessonSchema,
+  getDbWebSocket
 } from "@cooked/db";
-import { createCuisine, createCountry,getDbWebSocket } from "@cooked/db"
-import { db,eq } from "@cooked/db"
-import { cuisine,country,problemCategory,problem,problemsToCategories } from "@cooked/db/schema"
+import { createCuisine, createCountry, } from "@cooked/db/functions"
+import { cuisine,country,problemCategory,problem,problemsToCategories,lesson } from "@cooked/db/schema"
 import z from "zod"
 import { revalidatePath } from "next/cache"
 import { returnValidationErrors } from "next-safe-action";
@@ -63,7 +66,6 @@ export const deleteCuisineAction = adminAction.schema(
 export const createCountryAction = adminAction
   .schema(createCountrySchemaAction)
   .action(async ({parsedInput:props}) =>{
-    console.log('props',props);
     const id = await createCountry(props);
     return{
       success:true,
@@ -189,3 +191,12 @@ export const createProblemAction = adminAction
     };
   });
 
+  // Lesson actions (REMEMBER THAT WE ONLY NEED THE CATEGORY IDS AND NOT THE PROBLEM IDS AS THE PROBLEMS FOR A LESSON WILL BE GENERATED AT RUNTIME)
+
+  export const createLessonAction = adminAction
+  .schema(createLessonSchema)
+  .action(async ({parsedInput:props})=>{
+    db.insert(lesson).values({
+      ...props
+    });
+  });

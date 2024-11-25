@@ -29,7 +29,6 @@ import {
   SelectValue,
 } from "../ui/select";
 import c from "@cooked/config";
-import { useEffect } from "react";
 import MultipleChoiceController from "./MultipleChoiceController";
 
 

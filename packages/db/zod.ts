@@ -1,5 +1,5 @@
 import {createInsertSchema, createSelectSchema} from "drizzle-zod";
-import { cuisine, country, problemCategory, problem} from "./schema";
+import { cuisine, country, problemCategory, problem, lesson} from "./schema";
 import z from "zod";
 
 export const updateImageSchema = z.object({
@@ -20,6 +20,8 @@ export const createCountrySchemaForm = createInsertSchema(country,{
   countryID:true,
 });
 
+export const selectCuisinesSchema = createSelectSchema(cuisine);
+
 export const createCountrySchemaAction = createCountrySchemaForm.extend({
   cuisinesToCountry: z.array(z.string())
 })
@@ -35,3 +37,5 @@ export const createProblemSchema = createInsertSchema(problem,{
   problemContent:z.string().min(1),
   correctAnswer:z.string().min(1)
 });
+
+export const createLessonSchema = createInsertSchema(lesson);

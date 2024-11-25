@@ -7,7 +7,7 @@ export default async function CuisinesOverview(){
   const cuisines = await getAllCuisines();
   
   return (
-    <div className="w-full grid grid-cols-3 px-7 gap-x-5 gap-y-5">
+    <div className="w-full grid grid-cols-3 2xl:grid-cols-4 px-7 2xl:px-12 gap-x-5 gap-y-5">
       {cuisines.map((cuisine) => (
         <GeneralViewCard
           key={cuisine.cuisineID}

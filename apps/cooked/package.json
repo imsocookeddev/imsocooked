@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "dotenv -e ../../.env -- expo start --tunnel -c",
+    "dev:notunnel": "dotenv -e ../../.env -- expo start -c",
     "reset-project": "node ./scripts/reset-project.js",
     "with-env": "dotenv -e ../../.env --",
     "android": "expo start --android",

@@ -1,102 +1,69 @@
-import { View, Image, Text } from "tamagui";
-import {Link} from "expo-router";
+import { View, H4, XStack } from "tamagui";
+import { trpc } from "@/utils/trpc/client";
+import { InProgressBook } from "@/components/InProgressBook";
+import { ExploreBook } from "@/components/ExploreBook";
+import { ScrollView } from "tamagui";
+import cuisineColors from "@/constants/CuisineColors";
 
 export default function HomeScreen() {
+  const cuisineQuery = trpc.getCuisineData.useQuery();
+
+  function InProgressBookList() {
+    if (cuisineQuery.isFetching) {
+      return <H4>Loading Books...</H4>;
+    } else if (cuisineQuery.data?.inProgress.length === 0) {
+      return <H4>No Books in progress</H4>;
+    } else {
+      return cuisineQuery.data?.inProgress.map(
+        ({ imageUrl: _, cuisineDescription: _1, ...cuisineProps }) => (
+          <InProgressBook {...cuisineProps} key={cuisineProps.cuisineID} />
+        ),
+      );
+    }
+  }
+
   return (
-    <View style={{ backgroundColor: '#F3ECE2' }} className="h-full relative">
-      {/* Currently Cooking Section */}
+    <ScrollView flex={1} backgroundColor="#F3ECE2" pt="$12" px="$2">
+      {/* In Progress Section */}
       <View
-        style={{
-          width: 376,            // Width of the rectangle
-          height: 200,           // Height of the rectangle
-          backgroundColor: '#F0E3D2',  // Rectangle color
-          overflow: 'hidden',
-          position: 'absolute',
-          top: 50,
-        }}
+        backgroundColor="#F0E3D2"
+        py="$3"
+        borderRadius="$8"
+        px="$3"
+        shadowRadius="$2"
+        shadowOpacity={0.18}
+        shadowColor="black"
+        shadowOffset={{ height: 2, width: 0 }}
+        mb="$5"
       >
-        {/* Displaying the text */}
-        <Text style={{ position: 'absolute', top: 10, left: 10, color: '#715948F0' }}>Currently cooking!</Text>
-
-        {/* Row for images */}
-        <View
-          style={{
-            justifyContent: 'space-between', // Spacing between images
-            flexDirection: 'row', // Align images in a row
-            position: 'absolute',
-            top: 20, // Position the images below the text
-            left: 0,
-            right: 0,
-            height: '100%', // Ensures that the row takes the full height of the parent container
-          }}
-        >
-          <View style={{ width: '30%' }}>
-            <Image
-              source={require("@/assets/images/book.png")}
-              style={{ width: '100%', height: '80%' }} // Adjust the width to fit the images
-              resizeMode="contain"  // Keeps the aspect ratio
-            />
-            <Text style={{ textAlign: 'center', color: '#715948F0' }}>Greek</Text> {/* Text under the image */}
-          </View>
-          <View style={{ width: '30%' }}>
-            <Image
-              source={require("@/assets/images/book.png")}
-              style={{ width: '100%', height: '80%' }}
-              resizeMode="contain"
-            />
-            <Text style={{ textAlign: 'center', color: '#715948F0' }}>American</Text> {/* Text under the image */}
-          </View>
-          <View style={{ width: '30%' }}>
-            <Image
-              source={require("@/assets/images/book.png")}
-              style={{ width: '100%', height: '80%' }}
-              resizeMode="contain"
-            />
-            <Text style={{ textAlign: 'center', color: '#715948F0' }}>European</Text> {/* Text under the image */}
-          </View>
-        </View>
+        <H4 color="#715948" mb="$3" ml="$2" fontWeight="bold">
+          Currently Cooking!
+        </H4>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <InProgressBookList />
+        </ScrollView>
       </View>
-
+      <H4 color="#715948" ml="$2" fontWeight="bold">
+        Explore
+      </H4>
       {/* Explore Section */}
-      <View
-        style={{
-          marginTop: 300, // Push below the "Currently Cooking" section
-          padding: 10,
-        }}
+      <XStack
+        flexWrap="wrap"
+        gap="$6"
+        py="$4"
+        px="$5"
+        justifyContent="space-between"
       >
-        <Text style={{ color: '#715948F0', fontSize: 18, marginBottom: 10 }}>Explore</Text>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-          {/* Card 1 */}
-          <View style={{ width: '30%', marginBottom: 20 }}>
-              {/*<Link href={"@cooked/(app)/(home)/explore.tsx"}>*/}
-            <Image
-              source={require("@/assets/images/book.png")}
-              style={{ width: '100%', height: 120 }}
-              resizeMode="contain"
+        {cuisineQuery.data?.all.map(
+          ({ cuisineDescription: _, ...cuisineProps }, idx) => (
+            <ExploreBook
+              {...cuisineProps}
+              palette={cuisineColors[idx % cuisineColors.length]}
+              key={cuisineProps.cuisineID}
             />
-            <Text style={{ textAlign: 'center', color: '#715948F0', marginTop: 5 }}>Asian</Text>
-              {/*</Link>*/}
-          </View>
-          {/* Card 2 */}
-          <View style={{ width: '30%', marginBottom: 20 }}>
-            <Image
-              source={require("@/assets/images/book.png")}
-              style={{ width: '100%', height: 120 }}
-              resizeMode="contain"
-            />
-            <Text style={{ textAlign: 'center', color: '#715948F0', marginTop: 5 }}>Indian</Text>
-          </View>
-          {/* Card 3 */}
-          <View style={{ width: '30%', marginBottom: 20 }}>
-            <Image
-              source={require("@/assets/images/book.png")}
-              style={{ width: '100%', height: 120 }}
-              resizeMode="contain"
-            />
-            <Text style={{ textAlign: 'center', color: '#715948F0', marginTop: 5 }}>Mexican</Text>
-          </View>
-        </View>
-      </View>
-    </View>
+          ),
+        )}
+      </XStack>
+    </ScrollView>
   );
 }

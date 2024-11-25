@@ -30,11 +30,8 @@ export const selectProblemCategorySchema = createSelectSchema(problemCategory);
 
 export const selectProblemsSchema = createSelectSchema(problem).merge(selectProblemCategorySchema);
 
-const categoryTest = z.object({
-  categoryName: z.string().min(1)
-});
 
 export const createProblemSchema = createInsertSchema(problem,{
   problemContent:z.string().min(1),
   correctAnswer:z.string().min(1)
-}).merge(categoryTest);
+});

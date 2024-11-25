@@ -147,35 +147,45 @@ export const createProblemCategoryAction = adminAction
 });
 
 // Problem actions
-export const createProblem = adminAction
-.schema(createProblemSchema)
-.action(async ({parsedInput:props})=>{
-  // We need to parse and validate the type of the problem
-  const { categoryName, ...problemsProps } = props;
-  const {message, reason, success} = validateProblemType(categoryName,problemsProps.problemContent,problemsProps.correctAnswer)
-  if (!success){
-    returnValidationErrors(createProblemSchema, {
-      _errors: [`Reason is: ${reason} and error message is: ${message}`],
-    });
-  }
-  
-  const dbWebsocket = getDbWebSocket();
-  const res = await dbWebsocket.transaction(async (tx)=>{
-    const insertProblemResult = await tx.insert(problem).values({
-      ...problemsProps
-    }).returning({problemID:problem.problemID, categoryID:problem.categoryID});
+export const createProblemAction = adminAction
+  .schema(createProblemSchema)
+  .action(async ({ parsedInput: problemsProps }) => {
+    // We need to parse and validate the type of the problem
+    const { message, reason, success } = validateProblemType(
+      problemsProps.problemType,
+      problemsProps.problemContent,
+      problemsProps.correctAnswer
+    );
+    if (!success) {
+      returnValidationErrors(createProblemSchema, {
+        _errors: [`Reason is: ${reason} and error message is: ${message}`],
+      });
+    }
 
-    const problemsToCategoriesValues = insertProblemResult[0]!;
+    // For certain ones, we will then parse, shuffle, and stringify again
 
-    await tx.insert(problemsToCategories).values({
-      ...problemsToCategoriesValues
+    const dbWebsocket = getDbWebSocket();
+    const res = await dbWebsocket.transaction(async (tx) => {
+      const insertProblemResult = await tx
+        .insert(problem)
+        .values({
+          ...problemsProps,
+        })
+        .returning({
+          problemID: problem.problemID,
+          categoryID: problem.categoryID,
+        });
+
+      const problemsToCategoriesValues = insertProblemResult[0]!;
+
+      await tx.insert(problemsToCategories).values({
+        ...problemsToCategoriesValues,
+      });
+      return problemsToCategoriesValues.problemID;
     });
-    return problemsToCategoriesValues.problemID;
+    return {
+      success: true,
+      id: res,
+    };
   });
-  return {
-    success: true,
-    id: res,
-  };
-
-});
 

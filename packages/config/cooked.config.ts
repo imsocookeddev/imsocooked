@@ -39,6 +39,7 @@ export default {
         contentSchema:z.string().min(1),
         answerSchema:z.string().min(1),
       },
+      // can also add true and false into here
     },
   defaultHearts: 5,
   defaultImageURL:"https://cpsaxb6waydelzll.public.blob.vercel-storage.com/kitty-UVMd9CJBBFxJ1MUifj0lysaqPkUGUT.jpeg"

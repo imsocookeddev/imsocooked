@@ -1,5 +1,5 @@
 import { db, eq, and } from ".";
-import { cuisine, user,cuisinesToCountries, country, problem, lesson } from "./schema";
+import { cuisine, user,cuisinesToCountries, country, problem, lesson,cuisineProgress } from "./schema";
 import { CreateCuisineProps,CreateCountryActionProps,problemType } from "./types";
 import { getDbWebSocket } from ".";
 import c from "@cooked/config";
@@ -70,10 +70,6 @@ export async function updateUser({
     success = false;
   }
   return success;
-}
-
-export async function getAllCuisines() {
-  return db.query.cuisine.findMany();
 }
 
 export async function getCuisineByCuisineID(id: string) {

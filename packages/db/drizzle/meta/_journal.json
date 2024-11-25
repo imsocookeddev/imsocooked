@@ -71,6 +71,13 @@
       "when": 1732044553819,
       "tag": "0009_smiling_penance",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1732498090456,
+      "tag": "0010_secret_darwin",
+      "breakpoints": true
     }
   ]
 }

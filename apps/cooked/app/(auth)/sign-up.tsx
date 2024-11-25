@@ -74,7 +74,7 @@ export default function SignUpScreen() {
 
       if (completeSignUp.status === "complete") {
         await setActive({ session: completeSignUp.createdSessionId });
-        router.replace("/(app)/(home)");
+        router.replace("/(home)");
       } else {
         console.error(JSON.stringify(completeSignUp, null, 2));
       }
@@ -85,107 +85,105 @@ export default function SignUpScreen() {
   };
 
   return (
-    <>
+    <View
+      className="h-screen px-4 py-14 justify-center"
+      onPress={() => Keyboard.dismiss()}
+    >
       <CodeInputSheet
         open={pendingVerification}
         onSubmit={handleVerify}
         errors={otpClerkErrors}
       />
-      <View
-        className="h-screen px-4 py-14 justify-center"
-        onPress={() => Keyboard.dismiss()}
+      <Form
+        className="flex h-full items-center justify-evenly rounded-lg px-6"
+        onSubmit={handleSubmit(handleFormSubmit)}
+        backgroundColor="$background"
+        borderColor="$borderColor"
       >
-        <Form
-          className="flex h-full items-center justify-evenly rounded-lg px-6"
-          onSubmit={handleSubmit(handleFormSubmit)}
-          backgroundColor="$background"
-          borderColor="$borderColor"
-        >
-          <View className="flex justify-center items-center h-28">
-            <H4 className="text-5xl">Sign Up</H4>
-          </View>
-          <View className="w-full -mb-5" gap="$2">
-            <Controller
-              name="emailAddress"
-              control={control}
-              rules={{ required: true }}
-              render={({ field: { onChange, onBlur, value, name } }) => (
-                <View gap="$2">
-                  <Text className="text-red-600 text-right mr-2">
-                    {errors[name]?.message}
-                  </Text>
-                  <Input
-                    className="w-full h-14 text-lg"
-                    placeholder="Email Address"
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                    keyboardType="email-address"
-                  />
-                </View>
-              )}
-            />
+        <View className="flex justify-center items-center h-28">
+          <H4 className="text-5xl">Sign Up</H4>
+        </View>
+        <View className="w-full -mb-5" gap="$2">
+          <Controller
+            name="emailAddress"
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { onChange, onBlur, value, name } }) => (
+              <View gap="$2">
+                <Text className="text-red-600 text-right mr-2">
+                  {errors[name]?.message}
+                </Text>
+                <Input
+                  className="w-full h-14 text-lg"
+                  placeholder="Email Address"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  keyboardType="email-address"
+                />
+              </View>
+            )}
+          />
 
-            <Controller
-              name="password"
-              control={control}
-              rules={{ required: true }}
-              render={({ field: { onChange, onBlur, value, name } }) => (
-                <View gap="$2">
-                  <Text className="text-red-600 text-right mr-2">
-                    {errors[name]?.message}
-                  </Text>
-                  <Input
-                    className="w-full h-14 text-lg"
-                    placeholder="Password"
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                    secureTextEntry
-                  />
-                </View>
-              )}
-            />
+          <Controller
+            name="password"
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { onChange, onBlur, value, name } }) => (
+              <View gap="$2">
+                <Text className="text-red-600 text-right mr-2">
+                  {errors[name]?.message}
+                </Text>
+                <Input
+                  className="w-full h-14 text-lg"
+                  placeholder="Password"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  secureTextEntry
+                />
+              </View>
+            )}
+          />
 
-            <Controller
-              name="confirmPassword"
-              control={control}
-              rules={{ required: true }}
-              render={({ field: { onChange, onBlur, value, name } }) => (
-                <View gap="$2">
-                  <Text className="text-red-600 text-right mr-2">
-                    {errors[name]?.message}
-                  </Text>
-                  <Input
-                    className="w-full h-14 text-lg"
-                    placeholder="Confirm Password"
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                    secureTextEntry
-                  />
-                </View>
-              )}
-            />
-          </View>
-          <View className="w-full" gap="$2">
-            <Text className="text-red-600 text-right">
-              {formClerkErrors && formClerkErrors[0].message}
-            </Text>
-            <Form.Trigger asChild className="w-full h-14">
-              <Button className="text-xl">Create Account</Button>
-            </Form.Trigger>
-          </View>
-          <View className="items-center justify-center" gap="$1">
-            <Text className="text-lg">Already have an account?</Text>
-            <Link href="/sign-in">
-              <Text className="w-full text-sky-600 text-lg">Sign In</Text>
-            </Link>
-          </View>
-          <Separator className="border-2 self-stretch" />
-          <OAuthProviders />
-        </Form>
-      </View>
-    </>
+          <Controller
+            name="confirmPassword"
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { onChange, onBlur, value, name } }) => (
+              <View gap="$2">
+                <Text className="text-red-600 text-right mr-2">
+                  {errors[name]?.message}
+                </Text>
+                <Input
+                  className="w-full h-14 text-lg"
+                  placeholder="Confirm Password"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  secureTextEntry
+                />
+              </View>
+            )}
+          />
+        </View>
+        <View className="w-full" gap="$2">
+          <Text className="text-red-600 text-right">
+            {formClerkErrors && formClerkErrors[0].message}
+          </Text>
+          <Form.Trigger asChild className="w-full h-14">
+            <Button className="text-xl">Create Account</Button>
+          </Form.Trigger>
+        </View>
+        <View className="items-center justify-center" gap="$1">
+          <Text className="text-lg">Already have an account?</Text>
+          <Link href="/sign-in">
+            <Text className="w-full text-sky-600 text-lg">Sign In</Text>
+          </Link>
+        </View>
+        <Separator className="border-2 self-stretch" />
+        <OAuthProviders />
+      </Form>
+    </View>
   );
 }

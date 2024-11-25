@@ -178,7 +178,7 @@ export const problemsRelations = relations(problem, ({ many }) => ({
 // problems completions table
 export const problemCompletion = pgTable("problem_completion", {
   id: serial().primaryKey(),
-  problemID: varchar({ length: 255 }).notNull(),
+  problemID: uuid().notNull(),
   userID: varchar({ length: 255 }).notNull(),
 });
 
@@ -214,7 +214,7 @@ export const problemCategoryRelations = relations(
 // problemsToCategories table
 export const problemsToCategories = pgTable("problems_to_categories", {
   id: serial().primaryKey(),
-  problemID: varchar({ length: 255 }).notNull(),
+  problemID: uuid().notNull(),
   categoryID: integer().notNull(),
 });
 

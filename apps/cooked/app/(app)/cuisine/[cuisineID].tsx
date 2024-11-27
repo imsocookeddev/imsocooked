@@ -1,9 +1,10 @@
 import { trpc } from "@/utils/trpc/client";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { H1, YStack } from "tamagui";
-import Roadmap from "@/components/Roadmap";
+// import Roadmap from "@/components/Roadmap";
 import CuisineColors from "@/constants/CuisineColors";
 import { X } from "@tamagui/lucide-icons";
+import BookPath from "@/components/BookPath";
 
 export default function CuisinePage() {
   const { cuisineID } = useLocalSearchParams();
@@ -17,7 +18,7 @@ export default function CuisinePage() {
       <H1 fontWeight="bold" fontSize="$10" color={CuisineColors[0].primary}>
         {cuisineQuery.data?.cuisineName}
       </H1>
-      <Roadmap />
+      <BookPath />
     </YStack>
   );
 }

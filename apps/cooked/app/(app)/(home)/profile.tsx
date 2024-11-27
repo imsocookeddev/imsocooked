@@ -20,9 +20,16 @@ export default function ProfileView() {
     useEffect(() => {
         if (res.isFetched) {
             if (res.data?.message === undefined) router.replace("/(auth)/sign-in");
-            setUser(res.data?.message)
+            else {
+                const msg = { // because the date was a mismatch
+                    ...res.data?.message,
+                    joinedOn : res.data?.message.joinedOn ? new Date(res.data?.message.joinedOn) : null,
+                };
+                setUser(msg);
+            }
         }
-    }, [res]);
+    }, [res.isFetched]);
+    // bro do not put res in the dependencies
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [newFirstName, setNewFirstName] = useState("");
@@ -32,11 +39,12 @@ export default function ProfileView() {
     useEffect(() => {
         if (res.isFetched) {
             if (res.data?.message === undefined) return
+            //console.log("Setting new first name:", res.data?.message.firstName);
             setNewFirstName(res.data?.message.firstName)
             setNewLastName(res.data?.message.lastName)
             setNewEmail(res.data?.message.email)
         }
-    }, [updateRes]);
+    }, [res.isFetched, res.data?.message]);
 
     if (!user) return <Redirect href={"/(auth)/sign-in"}/>
 

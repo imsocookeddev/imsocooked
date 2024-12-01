@@ -61,7 +61,6 @@ export const deleteCuisineAction = adminAction.schema(
   }
 });
 
-
 // Country actions
 export const createCountryAction = adminAction
   .schema(createCountrySchemaAction)
@@ -149,6 +148,7 @@ export const createProblemCategoryAction = adminAction
 });
 
 // Problem actions
+// Add support for image urls in the multiple choice
 export const createProblemAction = adminAction
   .schema(createProblemSchema)
   .action(async ({ parsedInput: problemsProps }) => {
@@ -191,12 +191,15 @@ export const createProblemAction = adminAction
     };
   });
 
-  // Lesson actions (REMEMBER THAT WE ONLY NEED THE CATEGORY IDS AND NOT THE PROBLEM IDS AS THE PROBLEMS FOR A LESSON WILL BE GENERATED AT RUNTIME)
 
   export const createLessonAction = adminAction
   .schema(createLessonSchema)
   .action(async ({parsedInput:props})=>{
-    db.insert(lesson).values({
+   const res = await db.insert(lesson).values({
       ...props
-    });
+    }).returning({id:lesson.lessonID});
+    return {
+      success:true,
+      lessonID:res[0]?.id
+    }
   });

@@ -1,9 +1,10 @@
 import { db, eq, and } from ".";
-import { cuisine, user,cuisinesToCountries, country, problem, lesson,cuisineProgress } from "./schema";
+import { cuisine, user,cuisinesToCountries, country, problem, lesson,cuisineProgress, problemCategory } from "./schema";
 import { CreateCuisineProps,CreateCountryActionProps,problemType } from "./types";
 import { getDbWebSocket } from ".";
 import c from "@cooked/config";
 import z from "zod"
+
 export async function createUser({
   id,
   firstName,
@@ -112,6 +113,18 @@ export async function getAllCuisines(){
   return db.query.cuisine.findMany();
 }
 
+export async function getAllCuisinesWithCountries(){
+  return db.query.cuisine.findMany({
+    with:{
+      countriesToCuisines:{
+        with:{
+          country:true
+        }
+      }
+    }
+  });
+}
+
 export async function createCuisine(props:CreateCuisineProps){
   return db.insert(cuisine).values({
     ...props
@@ -168,6 +181,19 @@ export async function getAllProblems(){
   });
 }
 
+export async function getAllProblemCategoriesWithProblems(){
+  return db.query.problemCategory.findMany({
+    with: {
+      problemsToCategories: {
+        with: {
+          problems: true,
+        },
+      },
+    },
+    // categories is an alias for the problemCategory table
+    orderBy: (categories, { asc }) => [asc(categories.categoryName)],
+  });
+}
 
 
 // Helpers 

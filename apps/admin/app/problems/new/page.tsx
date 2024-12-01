@@ -4,11 +4,9 @@ import CreateProblemView from "@/components/problems/CreateProblemView";
 export default function CreateProblemPage() {
   return (
     <main className="w-screen h-screen flex flex-col items-center justify-center space-y-4">
-      <div className="flex flex-row w-1/5">
-        <h1 className="text-4xl">Add New Problem</h1>
-      </div>
+      <h1 className="text-4xl font-black">Create New Problem</h1>
       <Suspense fallback={<BasicLoader />}>
-       <CreateProblemView />
+        <CreateProblemView />
       </Suspense>
     </main>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import {useState} from "react";
+import { useState } from "react";
 import { X } from "lucide-react";
 
 import {
@@ -14,30 +14,26 @@ import {
 } from "../ui/select";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
-import { type GeneralSelectorProps, GeneralDropDownType } from "@/lib/types";
+import { type ProblemOrderSelectorProps } from "@/lib/types";
 
-export default function GeneralSelector(props:GeneralSelectorProps) {
-
-  const { options, name, renderProps:{
-    onChange,value
-  } } =
-    props;
+export default function ProblemOrderSelector(props: ProblemOrderSelectorProps) {
+  const {
+    options,
+    name,
+    renderProps: { onChange, value },
+  } = props;
 
   const [availableItems, setAvailableItems] = useState(options);
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
   const handleSelectItem = (itemID: string) => {
-    onChange([...value, itemID]);
-    setAvailableItems((prev) => prev.filter((f) => f.id !== itemID).sort((a,b) => a.name.localeCompare(b.name)));
-
+    const processedID = parseInt(itemID);
+    onChange([...value, processedID]);
   };
 
-  const handleRemoveItem = (itemID: string) => {
+  // Watch out for this as it should be removing all instances vs just one 
+  const handleRemoveItem = (itemID: number) => {
     onChange(value.filter((f) => f !== itemID));
-    setAvailableItems((prev) => [
-      ...prev,
-      options.find((f) => f.id === itemID)!,
-    ].sort((a,b) => a.name.localeCompare(b.name)));
   };
 
   return (
@@ -47,11 +43,11 @@ export default function GeneralSelector(props:GeneralSelectorProps) {
           <SelectValue placeholder={`Select from ${name}`} />
         </SelectTrigger>
         <SelectContent>
-            {availableItems.map((item) => (
-              <SelectItem key={item.id} value={item.id}>
-                {item.name}
-              </SelectItem>
-            ))}
+          {availableItems.map((item) => (
+            <SelectItem key={item.id} value={`${item.id}`} >
+              {item.name}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
 

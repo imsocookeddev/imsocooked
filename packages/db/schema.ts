@@ -146,8 +146,9 @@ export const lesson = pgTable("lesson", {
   countryID: uuid().notNull(),
   title: varchar({ length: 255 }).notNull(),
   cuisineID: uuid().notNull(),
-  problemOrder: uuid().array().notNull(),
+  problemOrder: integer().array().notNull(),
   recipeUrl: text().notNull(),
+  lessonDescription: text().notNull(),
 });
 
 // // lesson relations

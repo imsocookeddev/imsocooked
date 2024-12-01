@@ -4,9 +4,7 @@ import BasicLoader from "@/components/shared/Loader";
 export default function NewCountryPage() {
   return (
     <main className="w-screen h-screen flex flex-col items-center justify-center space-y-4">
-      <div className="flex flex-row w-1/5">
-        <h1 className="text-4xl">Add New Country</h1>
-      </div>
+      <h1 className="text-4xl font-black">Create New Country</h1>
       <Suspense fallback={<BasicLoader />}>
         <CreateCountryView />
       </Suspense>

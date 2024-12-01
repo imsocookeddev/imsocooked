@@ -1,9 +1,17 @@
-import z from "zod"
-import { 
-  createCuisineSchema,createCountrySchemaAction, createCountrySchemaForm, 
-  selectCountriesSchema, selectProblemCategorySchema, selectProblemsSchema, 
-  createProblemSchema, createLessonSchema, selectCuisinesSchema 
-} from "./zod"
+import z, { string } from "zod";
+import {
+  createCuisineSchema,
+  createCountrySchemaAction,
+  createCountrySchemaForm,
+  selectCountriesSchema,
+  selectProblemCategorySchema,
+  selectProblemsSchema,
+  createProblemSchema,
+  createLessonSchema,
+  selectCuisinesSchema,
+} from "./zod";
+import { getAllCuisinesWithCountries } from "./functions";
+import { ProblemOrderProps } from "@/lib/types";
 export type CreateCuisineProps = z.infer<typeof createCuisineSchema>;
 export type CreateCountryFormProps = z.infer<typeof createCountrySchemaForm>;
 export type CreateCountryActionProps = z.infer<typeof createCountrySchemaAction>;
@@ -13,3 +21,8 @@ export type problemType = z.infer<typeof selectProblemsSchema>;
 export type CreateProblemType = z.infer<typeof createProblemSchema>;
 export type CreateLessonType = z.infer<typeof createLessonSchema>;
 export type SelectCuisinesType = z.infer<typeof selectCuisinesSchema>;
+export type CuisinesWithCountriesType = Awaited<ReturnType<typeof getAllCuisinesWithCountries>>;
+export type CreateLessonFormProps = {
+  cuisinesWithCountries: CuisinesWithCountriesType;
+  categories: ProblemOrderProps[];
+};

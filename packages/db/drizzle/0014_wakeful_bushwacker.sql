@@ -1,0 +1,1 @@
+ALTER TABLE "lesson" DROP COLUMN IF EXISTS "problemOrder";

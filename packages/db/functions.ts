@@ -1,5 +1,13 @@
-import { db, eq, and } from ".";
-import { user, lesson, cuisineProgress, cuisine } from "./schema";
+import { db, eq, and, count } from ".";
+import {
+  user,
+  lesson,
+  cuisineProgress,
+  cuisine,
+  problem,
+  problemCategory,
+  problemCompletion,
+} from "./schema";
 import c from "@cooked/config";
 
 export async function createUser({
@@ -94,6 +102,48 @@ export async function getInProgressCuisines(userID: string) {
     console.error(e);
     return [];
   }
+}
+
+export async function getLessonByLessonID(lessonID: string) {
+  return db.query.lesson.findFirst({ where: eq(lesson.lessonID, lessonID) });
+}
+
+export async function getLeastCompletedProblemsByLesson(
+  lessonID: string,
+  userID: string,
+) {
+  const lessonData = await db.query.lesson.findFirst({
+    where: eq(lesson.lessonID, lessonID),
+  });
+
+  const problems = lessonData?.problemOrder.map(
+    async (categoryID) =>
+      await db.query.problem.findFirst({
+        where: (problems, { eq }) =>
+          eq(problems.categoryID, parseInt(categoryID)),
+        orderBy: (problem, { asc }) => {
+          const numCompletionsSubquery = db
+            .select({
+              completionCount: count(),
+            })
+            .from(problemCompletion)
+            .where(
+              and(
+                eq(problemCompletion.userID, userID),
+                eq(problemCompletion.problemID, problem.problemID),
+              ),
+            );
+
+          return asc(numCompletionsSubquery);
+        },
+      }),
+  );
+
+  if (!problems) {
+    return [];
+  }
+
+  return Promise.all(problems);
 }
 
 export async function getLessonsByCuisineID(cuisineID: string) {

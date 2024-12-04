@@ -161,8 +161,8 @@ export const problem = pgTable("problem", {
   prompt: varchar({ length: 255 }).notNull(),
   problemType: problemTypes().notNull(),
   categoryID: integer().notNull(),
-  // do we need the content?
-  correctAnswer: varchar({ length: 255 }).notNull(),
+  problemContent: text().notNull(), //This data will be stringified JSON
+  correctAnswer: text().notNull(), //This data will be stringified JSON
 });
 
 // problem relations

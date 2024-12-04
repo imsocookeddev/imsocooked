@@ -9,6 +9,7 @@ import {
   getAllCuisines,
   getInProgressCuisines,
   getCuisineByCuisineID,
+  getLeastCompletedProblemsByLesson,
 } from "@cooked/db";
 
 const newUser = authenticatedProcedure
@@ -63,9 +64,10 @@ const getCountryList = authenticatedProcedure.query(async () => {
 });
 
 const getCuisineData = authenticatedProcedure.query(async ({ ctx }) => {
-  const inProgress = await getInProgressCuisines(ctx.user.id);
-
-  const all = await getAllCuisines();
+  const [inProgress, all] = await Promise.all([
+    getInProgressCuisines(ctx.user.id),
+    getAllCuisines(),
+  ]);
 
   return { inProgress, all };
 });
@@ -98,6 +100,20 @@ const echoUserData = authenticatedProcedure.query(async ({ ctx: { user } }) => {
 
   return { message: u };
 });
+
+const getLessonData = authenticatedProcedure
+  .input(
+    z.object({
+      lessonID: z.string(),
+    }),
+  )
+  .query(async ({ ctx: { user }, input: { lessonID } }) => {
+    const problems = await getLeastCompletedProblemsByLesson(lessonID, user.id);
+
+    return {
+      problems,
+    };
+  });
 
 const updateUserData = authenticatedProcedure
   .input(
@@ -132,9 +148,15 @@ export const appRouter = router({
   checkExistingUser,
   getCountryList,
   getLessonsByCuisine,
+  getLessonData,
   updateUserData,
   getCuisineData,
   getCuisineByID,
 });
 
 export type AppRouter = typeof appRouter;
+
+// Cast the return type to a Lesson
+export type Question = NonNullable<
+  Awaited<ReturnType<typeof appRouter.getLessonData>>["problems"][number]
+>;

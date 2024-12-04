@@ -13,7 +13,10 @@ import { relations } from "drizzle-orm";
 import c from "../config";
 
 export const userRoles = pgEnum("roles", c.roles);
-export const problemTypes = pgEnum("problem_types", c.problem_types);
+const problemTypesConfig = Object.keys(c.problemTypes) as
+  | readonly [string, ...string[]]
+  | [string, ...string[]];
+export const problemTypes = pgEnum("problem_types",problemTypesConfig);
 
 // Users table
 export const user = pgTable("user", {
@@ -40,7 +43,11 @@ export const userRelations = relations(user, ({ many }) => ({
 export const cuisine = pgTable("cuisine", {
   cuisineID: uuid().defaultRandom().primaryKey(),
   cuisineName: varchar({ length: 255 }).notNull(),
-  imageUrl: text().notNull(),
+  imageUrl: text()
+    .notNull()
+    .default(
+      c.defaultImageURL
+    ),
   cuisineDescription: text().notNull(),
 });
 
@@ -77,8 +84,8 @@ export const cuisineProgressRelations = relations(
 // Countries
 export const country = pgTable("country", {
   countryID: uuid().defaultRandom().primaryKey(),
-  countryName: varchar({ length: 255 }).notNull(),
-  imageUrl: text().notNull(),
+  countryName: varchar({length:255}).notNull(),
+  imageUrl: text().notNull().default(c.defaultImageURL),
 });
 
 // country relations
@@ -139,8 +146,9 @@ export const lesson = pgTable("lesson", {
   countryID: uuid().notNull(),
   title: varchar({ length: 255 }).notNull(),
   cuisineID: uuid().notNull(),
-  problemOrder: uuid().array().notNull(),
+  problemOrder: integer().array().notNull(),
   recipeUrl: text().notNull(),
+  lessonDescription: text().notNull(),
 });
 
 // // lesson relations
@@ -161,8 +169,8 @@ export const problem = pgTable("problem", {
   prompt: varchar({ length: 255 }).notNull(),
   problemType: problemTypes().notNull(),
   categoryID: integer().notNull(),
-  // do we need the content?
-  correctAnswer: varchar({ length: 255 }).notNull(),
+  problemContent: text().notNull(), //This data will be stringified JSON
+  correctAnswer: text().notNull(), //This data will be stringified JSON
 });
 
 // problem relations
@@ -174,7 +182,7 @@ export const problemsRelations = relations(problem, ({ many }) => ({
 // problems completions table
 export const problemCompletion = pgTable("problem_completion", {
   id: serial().primaryKey(),
-  problemID: varchar({ length: 255 }).notNull(),
+  problemID: uuid().notNull(),
   userID: varchar({ length: 255 }).notNull(),
 });
 
@@ -210,7 +218,7 @@ export const problemCategoryRelations = relations(
 // problemsToCategories table
 export const problemsToCategories = pgTable("problems_to_categories", {
   id: serial().primaryKey(),
-  problemID: varchar({ length: 255 }).notNull(),
+  problemID: uuid().notNull(),
   categoryID: integer().notNull(),
 });
 

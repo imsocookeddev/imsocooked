@@ -4,7 +4,6 @@ import z from "zod"
 import { clerkClient } from "@clerk/nextjs/server"
 import { auth } from "@clerk/nextjs/server"
 
-
 export const signUserOutAction = adminAction
 .action(
   async ({ }) =>{
@@ -15,6 +14,6 @@ export const signUserOutAction = adminAction
     if (res.status !== 'revoked'){
       throw new Error('Failed to revoke session')
     }
-    redirectToSignIn()
+    redirectToSignIn();
   }
 )

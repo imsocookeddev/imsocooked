@@ -1,13 +1,9 @@
 'use client'
 import c from "@cooked/config";
-import { useSearchParams,usePathname } from "next/navigation";
-import clsx from "clsx";
-import { capitalizeFirstLetter } from "@/lib/utils";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 export default function AdminTabs() {
   const pathname = usePathname();
-
-  console.log("pathname is: ", pathname);
 
   return (
     <div className="flex flex-row items-end justify-center gap-x-4 h-full">

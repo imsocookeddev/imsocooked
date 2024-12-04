@@ -1,5 +1,5 @@
 {
-  "id": "44833d4e-9f57-456a-b90b-fabc9a00da10",
+  "id": "e256b9f7-0f8f-461a-aedd-284f92ae3012",
   "prevId": "e8bf2ca9-4f32-48cf-9b49-f98fb43d951c",
   "version": "7",
   "dialect": "postgresql",
@@ -43,9 +43,15 @@
           "primaryKey": true,
           "notNull": true
         },
+        "cuisineID": {
+          "name": "cuisineID",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
         "countryID": {
           "name": "countryID",
-          "type": "uuid",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
@@ -89,7 +95,8 @@
           "name": "imageUrl",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "'https://cpsaxb6waydelzll.public.blob.vercel-storage.com/kitty-UVMd9CJBBFxJ1MUifj0lysaqPkUGUT.jpeg'"
         },
         "cuisineDescription": {
           "name": "cuisineDescription",
@@ -115,7 +122,7 @@
         },
         "cuisineID": {
           "name": "cuisineID",
-          "type": "uuid",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
@@ -150,13 +157,13 @@
         },
         "cuisineID": {
           "name": "cuisineID",
-          "type": "uuid",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
         "countryID": {
           "name": "countryID",
-          "type": "uuid",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         }
@@ -179,7 +186,7 @@
         },
         "countryID": {
           "name": "countryID",
-          "type": "uuid",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
@@ -191,7 +198,7 @@
         },
         "cuisineID": {
           "name": "cuisineID",
-          "type": "uuid",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },

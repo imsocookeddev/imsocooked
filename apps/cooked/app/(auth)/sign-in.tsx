@@ -6,7 +6,8 @@ import { useSignIn, isClerkAPIResponseError } from "@clerk/clerk-expo";
 import { useRouter, Link } from "expo-router";
 import type { ClerkAPIError } from "@clerk/types";
 import { z } from "zod";
-import { Keyboard } from "react-native";
+import { Keyboard, ImageBackground,  } from "react-native";
+import backgroundImage from "@/assets/images/background2.png";
 import { OAuthProviders } from "@/components/OAuthProviders";
 
 const signInSchema = z.object({
@@ -53,18 +54,24 @@ export default function SignInScreen() {
   };
 
   return (
+    <ImageBackground
+    source={backgroundImage}
+    style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+  >
     <View
       className="h-screen px-4 py-14 justify-center"
       onPress={() => Keyboard.dismiss()}
     >
       <Form
-        className="flex h-full items-center justify-evenly rounded-lg px-6"
+        className="flex h-full items-center justify-evenly rounded-lg px-9"
         onSubmit={handleSubmit(handleFormSubmit)}
-        backgroundColor="$background"
+         backgroundColor="#F3ECE2"
         borderColor="$borderColor"
       >
-        <View className="flex justify-center items-center h-48">
-          <H4 className="text-5xl">Sign In</H4>
+        <View className="flex justify-center items-center h-40">
+          <H4 
+           style={{ color: "black", fontSize: 35 }}
+          className="text-5xl">Sign In</H4>
         </View>
         <View className="w-full -mb-5" gap="$2">
           <Controller
@@ -83,6 +90,15 @@ export default function SignInScreen() {
                   onChangeText={onChange}
                   value={value}
                   keyboardType="email-address"
+
+                  style={{
+                    backgroundColor: "#E5DDD2",
+                    color: "black",
+                    borderColor: "gray",
+                    height: 50,
+                    paddingHorizontal: 10,
+                    borderRadius: 5,
+                  }}
                 />
               </View>
             )}
@@ -104,6 +120,15 @@ export default function SignInScreen() {
                   onChangeText={onChange}
                   value={value}
                   secureTextEntry
+
+                  style={{
+                    backgroundColor: "#E5DDD2",
+                    color: "black",
+                    borderColor: "gray",
+                    height: 50,
+                    paddingHorizontal: 10,
+                    borderRadius: 5,
+                  }}
                 />
               </View>
             )}
@@ -114,11 +139,20 @@ export default function SignInScreen() {
             {formClerkErrors && formClerkErrors[0].message}
           </Text>
           <Form.Trigger asChild className="w-full h-14">
-            <Button className="text-xl">Log In</Button>
+            <Button 
+              style={{
+                backgroundColor: "#38AA7E",
+                height: 50,
+                justifyContent: "center",
+                borderRadius: 5,
+              }}
+            className="text-xl">Log In</Button>
           </Form.Trigger>
         </View>
         <View className="items-center justify-center" gap="$1">
-          <Text className="text-lg">Don't have an account?</Text>
+          <Text 
+           style={{ color: "orange", fontSize: 16 }}
+          className="text-lg">Don't have an account?</Text>
           <Link href="/sign-up">
             <Text className="w-full text-sky-600 text-lg">Sign Up</Text>
           </Link>
@@ -127,5 +161,6 @@ export default function SignInScreen() {
         <OAuthProviders />
       </Form>
     </View>
+    </ImageBackground>
   );
 }

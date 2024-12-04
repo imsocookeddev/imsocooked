@@ -7,7 +7,8 @@ import { useRouter, Link } from "expo-router";
 import type { ClerkAPIError } from "@clerk/types";
 import { z } from "zod";
 import { CodeInputSheet } from "@/components/CodeInputSheet";
-import { Keyboard } from "react-native";
+import { Keyboard, ImageBackground,  } from "react-native";
+import backgroundImage from "@/assets/images/background2.png";
 import { OAuthProviders } from "@/components/OAuthProviders";
 
 const signUpSchema = z
@@ -74,7 +75,7 @@ export default function SignUpScreen() {
 
       if (completeSignUp.status === "complete") {
         await setActive({ session: completeSignUp.createdSessionId });
-        router.replace("/(home)");
+        router.replace("/(app)/(home)");
       } else {
         console.error(JSON.stringify(completeSignUp, null, 2));
       }
@@ -85,6 +86,10 @@ export default function SignUpScreen() {
   };
 
   return (
+    <ImageBackground
+    source={backgroundImage}
+    style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+  >
     <View
       className="h-screen px-4 py-14 justify-center"
       onPress={() => Keyboard.dismiss()}
@@ -95,13 +100,15 @@ export default function SignUpScreen() {
         errors={otpClerkErrors}
       />
       <Form
-        className="flex h-full items-center justify-evenly rounded-lg px-6"
+        className="flex h-full items-center justify-evenly rounded-lg px-9"
         onSubmit={handleSubmit(handleFormSubmit)}
-        backgroundColor="$background"
+         backgroundColor="#F3ECE2"
         borderColor="$borderColor"
       >
         <View className="flex justify-center items-center h-28">
-          <H4 className="text-5xl">Sign Up</H4>
+          <H4 
+            style={{ color: "black", fontSize: 35 }}
+          className="text-5xl">Sign Up</H4>
         </View>
         <View className="w-full -mb-5" gap="$2">
           <Controller
@@ -120,6 +127,15 @@ export default function SignUpScreen() {
                   onChangeText={onChange}
                   value={value}
                   keyboardType="email-address"
+
+                  style={{
+                    backgroundColor: "#E5DDD2",
+                    color: "black",
+                    borderColor: "gray",
+                    height: 50,
+                    paddingHorizontal: 10,
+                    borderRadius: 5,
+                  }}
                 />
               </View>
             )}
@@ -141,6 +157,15 @@ export default function SignUpScreen() {
                   onChangeText={onChange}
                   value={value}
                   secureTextEntry
+
+                  style={{
+                    backgroundColor: "#E5DDD2",
+                    color: "black",
+                    borderColor: "gray",
+                    height: 50,
+                    paddingHorizontal: 10,
+                    borderRadius: 5,
+                  }}
                 />
               </View>
             )}
@@ -162,6 +187,15 @@ export default function SignUpScreen() {
                   onChangeText={onChange}
                   value={value}
                   secureTextEntry
+
+                  style={{
+                    backgroundColor: "#E5DDD2",
+                    color: "black",
+                    borderColor: "gray",
+                    height: 50,
+                    paddingHorizontal: 10,
+                    borderRadius: 5,
+                  }}
                 />
               </View>
             )}
@@ -172,11 +206,20 @@ export default function SignUpScreen() {
             {formClerkErrors && formClerkErrors[0].message}
           </Text>
           <Form.Trigger asChild className="w-full h-14">
-            <Button className="text-xl">Create Account</Button>
+            <Button 
+            style={{
+              backgroundColor: "#38AA7E",
+              height: 50,
+              justifyContent: "center",
+              borderRadius: 5,
+            }}
+            className="text-xl">Create Account</Button>
           </Form.Trigger>
         </View>
         <View className="items-center justify-center" gap="$1">
-          <Text className="text-lg">Already have an account?</Text>
+          <Text
+           style={{ color: "orange", fontSize: 16 }}
+          className="text-lg">Already have an account?</Text>
           <Link href="/sign-in">
             <Text className="w-full text-sky-600 text-lg">Sign In</Text>
           </Link>
@@ -185,5 +228,6 @@ export default function SignUpScreen() {
         <OAuthProviders />
       </Form>
     </View>
+    </ImageBackground>
   );
 }

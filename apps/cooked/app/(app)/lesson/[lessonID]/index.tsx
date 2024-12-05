@@ -1,23 +1,21 @@
 import Mascot from "@/assets/images/mascot.svg";
-import { ScrollView } from "react-native";
-import {
-  View,
-  H4,
-  Text,
-  YStack,
-  XStack,
-  Progress,
-  ProgressIndicator,
-  Button,
-} from "tamagui";
+import { Dimensions, ScrollView } from "react-native";
+import { View, H4, Text, YStack, XStack, Progress, Button } from "tamagui";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { X } from "@tamagui/lucide-icons";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLessonManager } from "@/hooks/useLessonManager";
 import { MultipleChoiceProblem } from "@/components/problems/MultipleChoiceProblem";
-import Animated from "react-native-reanimated";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  interpolate,
+  Extrapolation,
+} from "react-native-reanimated";
 import { trpc } from "@/utils/trpc/client";
 import { Question } from "@cooked/trpc";
+import { QuestionSkeleton } from "@/components/skeletons/QuestionSkeleton";
 
 function ShowcasePage() {
   const buttons = [
@@ -65,15 +63,50 @@ export default function QuestionScreen() {
     correct,
     incorrect,
     currentQuestion,
-    initialized,
     error,
     isComplete,
     updateQuestionList,
-  } = useLessonManager(lessonID as string);
+  } = useLessonManager();
+  const screenWidth = Dimensions.get("window").width;
+
+  const safelySetChoice = useCallback(
+    (choice: string) => {
+      setChoice(choice);
+    },
+    [setChoice],
+  );
+
+  const questionAnimValue = useSharedValue(0);
+
+  const animatedQuestionStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateX: interpolate(
+            questionAnimValue.value,
+            [0, 1],
+            [screenWidth, 0],
+            Extrapolation.CLAMP,
+          ),
+        },
+      ],
+    };
+  });
+
+  useEffect(() => {
+    questionAnimValue.value = 0;
+
+    requestAnimationFrame(() => {
+      questionAnimValue.value = withTiming(1, { duration: 500 });
+    });
+  }, [currentQuestion]);
 
   useEffect(() => {
     if (isComplete) {
-      router.push("/complete"); // TODO: complete the lesson here
+      router.push({
+        pathname: "/lesson/[lessonID]/complete",
+        params: { lessonID: lessonID as string },
+      }); // TODO: complete the lesson here
     }
   }, [isComplete]);
 
@@ -90,24 +123,26 @@ export default function QuestionScreen() {
           questionQuery.error.message,
       );
     }
-  }, [currentQuestion]);
+  }, [questionQuery.isSuccess, questionQuery.isError]);
 
   if (error) {
     return <Text>{error}</Text>;
   }
 
-  if (!initialized) {
-    return <Text>Loading...</Text>;
-  }
-
   const CurrentQuestion = () => {
+    if (!currentQuestion) {
+      return <QuestionSkeleton />;
+    }
     switch (currentQuestion.problemType) {
       case "mulitple_choice":
         return (
-          <MultipleChoiceProblem
-            question={currentQuestion}
-            setChoice={setChoice}
-          />
+          <Animated.View style={animatedQuestionStyle}>
+            <MultipleChoiceProblem
+              question={currentQuestion}
+              setChoice={safelySetChoice}
+              choice={choice}
+            />
+          </Animated.View>
         );
       case "drag-n-drop":
         console.error("Unimplemented problem type: drag-n-drop");
@@ -122,7 +157,10 @@ export default function QuestionScreen() {
   };
 
   const handleProblemSubmission = () => {
-    if (choice === currentQuestion.correctAnswer) {
+    if (
+      `"${choice.trim().toLowerCase()}"` ===
+      currentQuestion.correctAnswer.trim().toLowerCase()
+    ) {
       correct();
     } else {
       incorrect();
@@ -135,15 +173,15 @@ export default function QuestionScreen() {
         <X color="#a57d5b" size="$3" />
         <Progress
           key={0}
-          size="$4"
           value={progress}
+          size="$4"
           backgroundColor="#D9D9D9"
           borderWidth={1}
           borderColor="#C9C9C9"
           height="$3"
           max={100}
         >
-          <ProgressIndicator animation="bouncy" backgroundColor="#F37070" />
+          <Progress.Indicator animation="bouncy" backgroundColor="#F37070" />
         </Progress>
       </XStack>
       <YStack
@@ -153,6 +191,7 @@ export default function QuestionScreen() {
         mb="$8"
         borderRadius="$8"
         padding="$4"
+        overflow="hidden"
       >
         <CurrentQuestion />
       </YStack>

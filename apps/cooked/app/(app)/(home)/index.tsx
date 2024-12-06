@@ -49,7 +49,7 @@ export default function HomeScreen() {
       {/* Explore Section */}
       <XStack
         flexWrap="wrap"
-        gap="$6"
+        gap="$3"
         py="$4"
         px="$5"
         justifyContent="space-between"

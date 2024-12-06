@@ -4,6 +4,7 @@ import { H1, YStack } from "tamagui";
 import Roadmap from "@/components/Roadmap";
 import CuisineColors from "@/constants/CuisineColors";
 import { X } from "@tamagui/lucide-icons";
+import BookPath from "@/components/BookPath";
 
 export default function CuisinePage() {
   const { cuisineID } = useLocalSearchParams();
@@ -13,11 +14,9 @@ export default function CuisinePage() {
   });
 
   return (
-    <YStack flex={1} alignItems="center" backgroundColor="#F3ECE2" pt="$11">
-      <H1 fontWeight="bold" fontSize="$10" color={CuisineColors[0].primary}>
-        {cuisineQuery.data?.cuisineName}
-      </H1>
-      <Roadmap />
+    <YStack flex={1} alignItems="center" backgroundColor="#F3ECE2" pt="$9">
+      
+      <BookPath />
     </YStack>
   );
 }

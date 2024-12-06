@@ -55,7 +55,12 @@ export default function ProfileView() {
     return (
         <View className="h-full w-full bg-[#38AA7E]">
             <YStack gap={"$4"} marginVertical={"$4"}>
-                <H1 marginHorizontal={"$4"}>Profile</H1>
+                <H1 
+                style={{
+                    marginTop: 20,
+                    textAlign: "center",
+                    fontSize: 26}}
+                marginHorizontal={"$4"}>Profile</H1>
                 <XStack marginHorizontal={"$4"} gap={"$4"}>
                     <Avatar circular size={"$10"}>
                         <Avatar.Image
@@ -70,19 +75,48 @@ export default function ProfileView() {
                     </YStack>
                 </XStack>
                 <YStack backgroundColor={"#F3ECE2"} borderRadius={"$10"} minHeight={1000} paddingTop={"$8"} paddingHorizontal={"$4"} position={"relative"}>
-                    <H1 color={"black"}>Account Settings</H1>
+                    <H1 color={"black"}
+                    style={{ 
+                        marginBottom:10,
+                        fontSize: 30,
+                    }}
+
+                    >Account Settings</H1>
                     <Form onSubmit={onSubmit}>
                         <Label color={"black"}>First Name</Label>
-                        <Input size={"$3"} backgroundColor={"#D9D9D9"} color="black" onChangeText={(t) => setNewFirstName(t)}>{newFirstName}</Input>
+                        <Input size={"$3"} backgroundColor={"#E9E1D7"} color="black" onChangeText={(t) => setNewFirstName(t)}>{newFirstName}</Input>
                         <Label color={"black"}>Last Name</Label>
-                        <Input size={"$3"} backgroundColor={"#D9D9D9"} color="black" onChangeText={(t) => setNewLastName(t)}>{newLastName}</Input>
+                        <Input size={"$3"} backgroundColor={"#E9E1D7"} color="black" onChangeText={(t) => setNewLastName(t)}>{newLastName}</Input>
                         <Label color={"black"}>Email</Label>
-                        <Input size={"$3"} backgroundColor={"#D9D9D9"} color="black" onChangeText={(t) => setNewEmail(t)}>{newEmail}</Input>
-                        <Form.Trigger asChild disabled={isLoading}><Button marginVertical={"$5"} icon={isLoading ? () => <Spinner /> : undefined}>
-                            Save
+                        <Input 
+                        style={{ marginBottom: 40}}
+                        size={"$3"} backgroundColor={"#E9E1D7"} color="black" onChangeText={(t) => setNewEmail(t)}>{newEmail}</Input>
+                        <Form.Trigger asChild disabled={isLoading}><Button    
+                        style={{
+                        backgroundColor: "transparent", 
+                        borderColor: "#38AA7E", 
+                        borderWidth: 2, // Border thickness
+                        borderRadius: 25, // Rounded corners
+                        height: 40, // Adjust height
+                        justifyContent: "center", // Center text vertically
+                        alignItems: "center", // Center text horizontally
+                        marginVertical: 10, // Spacing
+                        }}
+                        color= "black"
+                        marginVertical={"$5"} icon={isLoading ? () => <Spinner /> : undefined}>
+                        Save
                         </Button></Form.Trigger>
                     </Form>
-                    <Button backgroundColor="red" color="black" onPress={() => signOut()}><Text>Log out</Text></Button>
+                    <Button 
+                      style={{
+                        shadowColor: "#000",
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.3,
+                        shadowRadius: 4,
+                        elevation: 5, // For Android
+                        marginBottom: 40,
+                      }}                         
+                    backgroundColor="#FE6F6C" borderRadius={25} color="black" onPress={() => signOut()}><Text>Log out</Text></Button>
                 </YStack>
             </YStack>
         </View>

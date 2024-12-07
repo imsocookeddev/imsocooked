@@ -10,7 +10,18 @@ import {
   getInProgressCuisines,
   getCuisineByCuisineID,
   getLeastCompletedProblemsByLesson,
+  getIndividualLesson,
 } from "@cooked/db";
+
+const getIndividualLessonData = authenticatedProcedure
+  .input(
+    z.object({
+      lessonID: z.string(),
+    }),
+  )
+  .query(async ({ ctx: { user }, input: { lessonID } }) => {
+    return await getIndividualLesson(lessonID);
+  });
 
 const newUser = authenticatedProcedure
   .input(
@@ -152,6 +163,7 @@ export const appRouter = router({
   updateUserData,
   getCuisineData,
   getCuisineByID,
+  getIndividualLessonData,
 });
 
 export type AppRouter = typeof appRouter;

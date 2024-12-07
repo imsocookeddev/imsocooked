@@ -76,8 +76,14 @@ const ImageArray = () => {
 
   // Map over the array to create Image components
   const imageComponents = ImageMap.map((image, idx) => (
-    <View key={idx} style={{}}>
-      <Link href={"/(app)/lesson/1/1"} style={image.style}>
+    <View key={idx}>
+      <Link
+        href={{
+          pathname: "/(app)/lesson/[lessonID]",
+          params: { lessonID: "e8f59017-58b8-432c-adad-03bc52ea098c" },
+        }}
+        style={image.style}
+      >
         <Image source={image.src} />
       </Link>
     </View>

@@ -150,6 +150,10 @@ export async function getLessonsByCuisineID(cuisineID: string) {
   return db.query.lesson.findMany({ where: eq(lesson.cuisineID, cuisineID) });
 }
 
+export async function getIndividualLesson(lessonID: string) {
+  return db.query.lesson.findFirst({ where: eq(lesson.lessonID, lessonID) });
+}
+
 export async function getAdminUser(id: string) {
   return db.query.user.findFirst({
     where: and(eq(user.userID, id), eq(user.role, "admin")),

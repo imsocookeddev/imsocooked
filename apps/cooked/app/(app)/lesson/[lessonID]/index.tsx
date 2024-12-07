@@ -104,7 +104,7 @@ export default function QuestionScreen() {
   useEffect(() => {
     if (isComplete) {
       router.push({
-        pathname: "/lesson/[lessonID]/complete",
+        pathname: "/(app)/lesson/[lessonID]/complete",
         params: { lessonID: lessonID as string },
       }); // TODO: complete the lesson here
     }

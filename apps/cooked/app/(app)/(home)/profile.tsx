@@ -88,9 +88,9 @@ export default function ProfileView() {
                         <Label color={"black"}>Last Name</Label>
                         <Input size={"$3"} backgroundColor={"#E9E1D7"} color="black" onChangeText={(t) => setNewLastName(t)}>{newLastName}</Input>
                         <Label color={"black"}>Email</Label>
-                        <Input 
+                        <Input
                         style={{ marginBottom: 40}}
-                        size={"$3"} backgroundColor={"#E9E1D7"} color="black" onChangeText={(t) => setNewEmail(t)}>{newEmail}</Input>
+                        size={"$3"} backgroundColor={"#ADADAD"} color="black" onChangeText={(t) => setNewEmail(t)}>{newEmail}</Input>
                         <Form.Trigger asChild disabled={isLoading}><Button    
                         style={{
                         backgroundColor: "transparent", 
